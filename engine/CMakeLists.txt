@@ -26,48 +26,6 @@ set_property(TARGET engine PROPERTY CXX_STANDARD 23)
 
 include(FetchContent)
 
-# Fetch GLFW
-FetchContent_Declare(
-  glfw
-  GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG        3.4 # Replace with the desired version
-)
-FetchContent_MakeAvailable(glfw)
-
-# Fetch GLAD
-FetchContent_Declare(
-  glad
-  GIT_REPOSITORY https://github.com/Dav1dde/glad.git
-  GIT_TAG        master # You can specify a branch, tag, or commit hash
-)
-FetchContent_MakeAvailable(glad)
-
-if(NOT glad_POPULATED)
-    FetchContent_Populate(glad)
-    set(GLAD_PROFILE "core" CACHE STRING "OpenGL profile")
-    set(GLAD_API "gl=" CACHE STRING "API type/version pairs, like \"gl=3.2,gles=\", no version means latest")
-    set(GLAD_GENERATOR "c" CACHE STRING "Language to generate the binding for")
-    add_subdirectory(${glad_SOURCE_DIR} ${glad_BINARY_DIR})
-endif()
-
-# Fetch GLM
-FetchContent_Declare(
-  glm
-  GIT_REPOSITORY https://github.com/g-truc/glm.git
-  GIT_TAG        1.0.1 # Replace with the desired version
-)
-FetchContent_MakeAvailable(glm)
-
-FetchContent_Declare(
-    stb
-    GIT_REPOSITORY https://github.com/nothings/stb.git
-    GIT_TAG        master
-)
-
-FetchContent_MakeAvailable(stb)
-# Include the directory containing stb headers
-target_include_directories(engine PUBLIC ${stb_SOURCE_DIR} )
-
 FetchContent_Declare(
     fastnoise
     GIT_REPOSITORY https://github.com/Auburn/FastNoise2.git
@@ -77,6 +35,11 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(fastnoise)
 set(FASTNOISE2_NOISETOOL OFF CACHE BOOL "Build Noise Tool" FORCE)
 
-# Now you can use these libraries in your project
+find_package(Freetype REQUIRED)
+find_package(glm CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
+find_package(Stb REQUIRED)
 
-target_link_libraries(engine PUBLIC glfw glad glm FastNoise)
+target_link_libraries(engine PUBLIC glfw glad::glad glm::glm FastNoise Freetype::Freetype)
+target_include_directories(engine PUBLIC ${Stb_INCLUDE_DIR})
