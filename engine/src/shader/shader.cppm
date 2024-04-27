@@ -18,7 +18,7 @@ export namespace Engine {
 
         void setInt(const std::string&name, const int value) const;
 
-        void setFloat(const std::string name, const float value) const;
+        void setFloat(const std::string&name, const float value) const;
 
         void setMat4(const std::string &name, glm::mat4 &matrix) const;
 

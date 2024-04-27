@@ -69,14 +69,14 @@ namespace Engine {
     }
 
     void Shader::setBool(const std::string&name, const bool value) const {
-        glUniform1i(uniforms.at(name), (int)value);
+        glUniform1i(uniforms.at(name), static_cast<int>(value));
     }
 
     void Shader::setInt(const std::string&name, const int value) const {
         glUniform1i(uniforms.at(name), value);
     }
 
-    void Shader::setFloat(const std::string name, const float value) const {
+    void Shader::setFloat(const std::string&name, const float value) const {
         glUniform1f(uniforms.at(name), value);
     }
 

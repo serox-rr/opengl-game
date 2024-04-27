@@ -1,8 +1,9 @@
 module;
+#include <filesystem>
 #include <vector>
 #include <iostream>
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/fwd.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -19,12 +20,14 @@ bool firstMouse = true;
 Engine::Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 int main() {
-    Engine::init();
+    try {
+        Engine::init();
     const Engine::Window window(1920, 1080);
     window.setInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    Engine::settings();
     Engine::initFreeType();
-    Engine::shaders.emplace_back(Engine::Shader(R"(../../../engine/shaders/coords/vertexShader.glsl)",
-                                      R"(../../../engine/shaders/coords/fragmentShader.glsl)",
+    Engine::shaders.emplace_back(Engine::Shader(R"(../../../engine/shaders/coords/coords.vert)",
+                                      R"(../../../engine/shaders/coords/coords.frag)",
                                       std::vector({"transpose", "time", "model"})));
     camera.setSpeed(10.0f);
     Engine::shaders[0].use();
@@ -64,6 +67,10 @@ int main() {
         frameAmount++;
     }
     glfwTerminate();
+    } catch (std::exception const& e) {
+        std::cout << e.what() << std::endl;
+        return -1;
+    }
     return 0;
 }
 

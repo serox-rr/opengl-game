@@ -4,13 +4,12 @@ export module engine.renderable.terrain;
 import engine.renderable;
 
 export namespace Engine {
-    class Terrain final: public Renderable {
+    class Text final: public Renderable {
     public:
-        Terrain();
+        Text();
         void render() override;
-        ~Terrain() override;
+        ~Text() override;
     private:
-        GLuint vao;
         unsigned width, height;
     };
 }

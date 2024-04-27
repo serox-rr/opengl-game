@@ -1,14 +1,16 @@
 module;
-#include <iostream>
-#include <ostream>
 #include <vector>
 #include <glad/glad.h>
 #include <FastNoise/FastNoise.h>
-
+#include <glm/glm.hpp>
+#include <glm/fwd.hpp>
+#include "glm/ext/matrix_transform.hpp"
 module engine.renderable.terrain;
+import engine;
 
 namespace Engine {
-    Terrain::Terrain(): width(1000), height(1000), vao(0) {
+    Text::Text(): width(1000), height(1000) {
+        position = glm::vec3(100, 100, 100);
         GLuint vbo, ebo;
         std::vector<float> points = {};
         const FastNoise::SmartNode<> fnGenerator = FastNoise::NewFromEncodedNodeTree("IgD2KLxApHA9PwcA");
@@ -16,9 +18,9 @@ namespace Engine {
         fnGenerator->GenUniformGrid2D(noiseOutput.data(), 0, 0, width, height, 0.009f, 300);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                points.push_back(i*1000);
-                points.push_back(noiseOutput[i*height+j]*30000);
-                points.push_back(j*1000);
+                points.push_back(i * 1000);
+                points.push_back(noiseOutput[i * height + j] * 30000);
+                points.push_back(j * 1000);
             }
         }
         std::vector<unsigned> indices = {};
@@ -54,7 +56,7 @@ namespace Engine {
                      GL_STATIC_DRAW);
     }
 
-    void Terrain::render() {
+    void Text::render() {
         // draw mesh
         glBindVertexArray(vao);
         // render the mesh triangle strip by triangle strip - each row at a time
@@ -68,5 +70,5 @@ namespace Engine {
         }
     }
 
-    Terrain::~Terrain() = default;
+    Text::~Text() = default;
 }
