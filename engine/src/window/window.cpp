@@ -36,6 +36,10 @@ namespace Engine {
         glViewport(0, 0, width, height);
     }
 
+    void Window::disableVSYNC() {
+        glfwSwapInterval(0);
+    }
+
     Window::operator GLFWwindow *() const {
         return glfwWindow;
     }

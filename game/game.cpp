@@ -9,11 +9,12 @@ Engine::Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 int main() {
     Engine::init();
     const Engine::Window window(1920, 1080);
-    Engine::disableVSYNC();
+    Engine::enableDepthTest();
     window.setInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     const Engine::Shader coordsShader(R"(E:\Dev\C C++ projects\opengl-game\engine\shaders\coords\vertexShader.glsl)",
                                       R"(E:\Dev\C C++ projects\opengl-game\engine\shaders\coords\fragmentShader.glsl)",
                                       std::vector({"transpose", "time"}));
+    Engine::enableDepthTest();
     camera.setSpeed(10.0f);
     coordsShader.use();
     int frameAmount = 0;
@@ -32,7 +33,7 @@ int main() {
         lastFrame = currentFrame;
         glm::mat4 projection = glm::perspective(glm::radians(camera.getFov()),
                                                 static_cast<float>(window.getWidth() / window.getHeight()), 0.1f,
-                                                1000.0f);
+                                                100000000.0f);
         glm::mat4 transpose = projection * *camera.getView();
         coordsShader.setMat4("transpose", &transpose);
         coordsShader.setFloat("time", currentFrame);
@@ -51,7 +52,7 @@ int main() {
 }
 
 void processInput(GLFWwindow* window) {
-    camera.setSpeed(50.0f * deltaTime);
+    camera.setSpeed(100000.0f * deltaTime);
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -69,12 +70,8 @@ void processInput(GLFWwindow* window) {
         camera.moveDown();
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-
 float lastX = 400, lastY = 300;
-
-void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+void mouse_callback(GLFWwindow* window, const double xpos, const double ypos) {
     float xoffset = xpos - lastX;
     float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
     lastX = xpos;
@@ -87,9 +84,10 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     }
     xoffset *= camera.getSensitivity();
     yoffset *= camera.getSensitivity();
-    camera.setLookingDirection(camera.getYaw() + xoffset, camera.getPitch() + yoffset);
+    camera.setLookingDirection(camera.getYaw() + xoffset,
+                               camera.getPitch() + yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    camera.setFov(camera.getFov() - (float)yoffset);
+    camera.setFov(camera.getFov() - static_cast<float>(yoffset));
 }

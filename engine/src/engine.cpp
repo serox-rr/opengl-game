@@ -14,7 +14,7 @@ namespace Engine {
 #endif
     }
 
-    void disableVSYNC() {
+    void enableDepthTest() {
         glEnable(GL_DEPTH_TEST);
     }
 }

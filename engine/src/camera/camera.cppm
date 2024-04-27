@@ -32,8 +32,8 @@ export namespace Engine {
 
 
     private:
-        glm::vec3 position, front, up;
+        glm::vec<3, double> position, front, up;
         glm::mat4 view;
-        float yaw = -90.f, pitch = 0.0f, speed = 10.0f, sensitivity = 0.1f, fov = 45.0f;
+        double yaw = -90.0, pitch = 0.0, speed = 10.0, sensitivity = 0.1, fov = 45.0;
     };
 }

@@ -8,5 +8,5 @@ export import :window;
 
 export namespace Engine {
     void init();
-    void disableVSYNC();
+    void enableDepthTest();
 }

@@ -5,7 +5,7 @@ module;
 module engine;
 
 namespace Engine {
-    Camera::Camera(const glm::vec3 _position): position(_position), front(glm::vec3(0.0f, 0.0f, -1.0f)), up( glm::vec3(0.0f, 1.0f,  0.0f)), view(glm::lookAt(position, position + front, up)) {}
+    Camera::Camera(const glm::vec3 _position): position(_position), front(glm::vec3(0.0, 0.0, -1.0)), up( glm::vec3(0.0, 1.0,  0.0)), view(glm::lookAt(position, position + front, up)) {}
 
     glm::mat4* Camera::getView() {
         return &view;
@@ -59,11 +59,10 @@ namespace Engine {
             pitch =  89.0f;
         if(pitch < -89.0f)
             pitch = -89.0f;
-
         glm::vec3 direction;
-        direction.x = static_cast<float>(cos(glm::radians(yaw)) * cos(glm::radians(pitch)));
-        direction.y = static_cast<float>(sin(glm::radians(pitch)));
-        direction.z = static_cast<float>(sin(glm::radians(yaw)) * cos(glm::radians(pitch)));
+        direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        direction.y = sin(glm::radians(pitch));
+        direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
         front = glm::normalize(direction);
         updateView();
     }

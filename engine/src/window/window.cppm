@@ -10,6 +10,7 @@ export namespace Engine {
         operator GLFWwindow*() const;
         [[nodiscard]] int getHeight() const;
         [[nodiscard]] int getWidth() const;
+        static void disableVSYNC();
     private:
         int height,width;
         GLFWwindow* glfwWindow;

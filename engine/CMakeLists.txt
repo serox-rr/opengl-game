@@ -75,8 +75,8 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(fastnoise)
-
+set(FASTNOISE2_NOISETOOL OFF CACHE BOOL "Build Noise Tool" FORCE)
 
 # Now you can use these libraries in your project
 
-target_link_libraries(engine PUBLIC glfw glad glm)
+target_link_libraries(engine PUBLIC glfw glad glm FastNoise)
