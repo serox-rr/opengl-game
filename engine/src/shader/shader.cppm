@@ -14,17 +14,17 @@ export namespace Engine {
 
         void use() const;
 
-        void setBool(const char* name, bool value) const;
+        void setBool(const std::string&name, const bool value) const;
 
-        void setInt(const char* name, int value) const;
+        void setInt(const std::string&name, const int value) const;
 
-        void setFloat(const char* name, float value) const;
+        void setFloat(const std::string name, const float value) const;
 
-        void setMat4(const char* name, glm::mat4* matrix) const;
+        void setMat4(const std::string &name, glm::mat4 &matrix) const;
 
     private:
-        static void checkCompileErrors(unsigned int shader, const std::string&type);
+        static void checkCompileErrors(const unsigned int shader, const std::string&type);
 
-        std::map<const char *, int> uniforms;
+        std::map<std::string, int> uniforms;
     };
 }

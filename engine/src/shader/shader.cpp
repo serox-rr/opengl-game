@@ -5,6 +5,7 @@ module;
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <string>
 module engine;
 
 namespace Engine {
@@ -67,19 +68,19 @@ namespace Engine {
         glUseProgram(ID);
     }
 
-    void Shader::setBool(const char* name, bool value) const {
+    void Shader::setBool(const std::string&name, const bool value) const {
         glUniform1i(uniforms.at(name), (int)value);
     }
 
-    void Shader::setInt(const char* name, int value) const {
+    void Shader::setInt(const std::string&name, const int value) const {
         glUniform1i(uniforms.at(name), value);
     }
 
-    void Shader::setFloat(const char* name, float value) const {
+    void Shader::setFloat(const std::string name, const float value) const {
         glUniform1f(uniforms.at(name), value);
     }
 
-    void Shader::checkCompileErrors(unsigned int shader, const std::string&type) {
+    void Shader::checkCompileErrors(const unsigned int shader, const std::string&type) {
         int success;
         char infoLog[1024];
         if (type != "PROGRAM") {
@@ -100,7 +101,7 @@ namespace Engine {
         }
     }
 
-    void Shader::setMat4(const char* name, glm::mat4* matrix) const {
-        glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, glm::value_ptr(*matrix));
+    void Shader::setMat4(const std::string&name, glm::mat4&matrix) const {
+        glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, glm::value_ptr(matrix));
     }
 }
