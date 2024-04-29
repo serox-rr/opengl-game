@@ -1,30 +1,32 @@
 module;
-#include "glm/fwd.hpp"
-#include <string>
-#include <vector>
 #include <map>
+#include <string>
+#include <initializer_list>
+#include "glm/fwd.hpp"
 export module engine:shader;
 
 export namespace Engine {
     class Shader {
     public:
-        unsigned int ID;
-
-        Shader(const char* vertexPath, const char* fragmentPath, std::vector<const char *> uniformsName);
+        Shader(const std::string &vertexPath, const std::string &fragmentPath, std::initializer_list<std::string> uniformsName);
 
         void use() const;
 
-        void setBool(const std::string&name, const bool value) const;
+        void setBool(const std::string &name, bool value) const;
 
-        void setInt(const std::string&name, const int value) const;
+        void setInt(const std::string &name, int value) const;
 
-        void setFloat(const std::string&name, const float value) const;
+        void setFloat(const std::string &name, float value) const;
 
         void setMat4(const std::string &name, glm::mat4 &matrix) const;
 
-    private:
-        static void checkCompileErrors(const unsigned int shader, const std::string&type);
+        void setVec3(const std::string &name, const glm::vec3 &vec3) const;
 
-        std::map<std::string, int> uniforms;
+        [[nodiscard]] unsigned getId() const;
+
+    private:
+        unsigned int ID;
+        static void checkCompileErrors(unsigned int shader, const std::string &type);
+        std::map<const std::string, unsigned> uniforms;
     };
-}
+} // namespace Engine

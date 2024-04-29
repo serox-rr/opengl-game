@@ -1,15 +1,18 @@
 module;
-#include "GLFW/glfw3.h"
-export module engine.renderable.terrain;
-import engine.renderable;
+#include <glm/glm.hpp>
+
+export module engine:renderable.terrain;
+import :shader;
+import :renderable;
 
 export namespace Engine {
-    class Text final: public Renderable {
+    class Terrain final: public Renderable {
     public:
-        Text();
+        explicit Terrain();
         void render() override;
-        ~Text() override;
+        ~Terrain() override;
     private:
         unsigned width, height;
+        glm::vec3 position{};
     };
 }

@@ -1,15 +1,14 @@
 module;
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-export module engine.renderable;
+export module engine:renderable;
+import :shader;
 
 export namespace Engine {
     class Renderable {
     public:
+        Renderable(const unsigned vao, const unsigned vbo):vao(vao),vbo(vbo) {};
         virtual void render() = 0;
         virtual ~Renderable() = default;
     protected:
-        GLuint vao{};
-        glm::vec3 position{};
+        unsigned vao, vbo;
     };
 }

@@ -4,14 +4,12 @@ module;
 #include <FastNoise/FastNoise.h>
 #include <glm/glm.hpp>
 #include <glm/fwd.hpp>
-#include "glm/ext/matrix_transform.hpp"
-module engine.renderable.terrain;
-import engine;
+module engine;
 
 namespace Engine {
-    Text::Text(): width(1000), height(1000) {
+    Terrain::Terrain(): Renderable(0,0), width(1000), height(1000) {
         position = glm::vec3(100, 100, 100);
-        GLuint vbo, ebo;
+        GLuint ebo;
         std::vector<float> points = {};
         const FastNoise::SmartNode<> fnGenerator = FastNoise::NewFromEncodedNodeTree("IgD2KLxApHA9PwcA");
         std::vector<float> noiseOutput(width * height);
@@ -56,7 +54,7 @@ namespace Engine {
                      GL_STATIC_DRAW);
     }
 
-    void Text::render() {
+    void Terrain::render() {
         // draw mesh
         glBindVertexArray(vao);
         // render the mesh triangle strip by triangle strip - each row at a time
@@ -70,5 +68,5 @@ namespace Engine {
         }
     }
 
-    Text::~Text() = default;
+    Terrain::~Terrain() = default;
 }

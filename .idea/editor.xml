@@ -2,7 +2,7 @@
 <project version="4">
   <component name="BackendCodeEditorSettings">
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
-    <option name="/Default/CodeStyle/CodeFormatting/CppClangFormat/EnableClangFormatSupport/@EntryValue" value="false" type="bool" />
+    <option name="/Default/CodeStyle/CodeFormatting/CppClangFormat/EnableClangFormatSupport/@EntryValue" value="true" type="bool" />
     <option name="/Default/CodeStyle/EditorConfig/EnableClangFormatSupport/@EntryValue" value="false" type="bool" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/ALIGN_MULTILINE_BINARY_EXPRESSIONS_CHAIN/@EntryValue" value="true" type="bool" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/ALIGN_MULTILINE_CALLS_CHAIN/@EntryValue" value="false" type="bool" />
@@ -84,21 +84,13 @@
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/CONTINUOUS_LINE_INDENT/@EntryValue" value="Double" type="string" />
     <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/TAB_WIDTH/@EntryValue" value="4" type="int" />
     <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Text/@EntryValue" value="std::cout &lt;&lt; $END$ &lt;&lt; std::endl;" type="string" />
-    <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=PRINT/@KeyIndexDefined" />
     <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=PRINT/Order/@EntryValue" value="0" type="long" />
-    <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=PRIN/@KeyIndexDefined" />
     <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=PRIN/Order/@EntryValue" value="0" type="long" />
-    <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=PRI/@KeyIndexDefined" />
     <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=PRI/Order/@EntryValue" value="0" type="long" />
-    <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=PR/@KeyIndexDefined" />
     <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=PR/Order/@EntryValue" value="0" type="long" />
-    <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=P/@KeyIndexDefined" />
     <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=P/Order/@EntryValue" value="0" type="long" />
-    <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=E/@KeyIndexDefined" />
     <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=E/Order/@EntryValue" value="0" type="long" />
-    <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=EN/@KeyIndexDefined" />
     <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=EN/Order/@EntryValue" value="0" type="long" />
-    <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=ENDS/@KeyIndexDefined" />
     <option name="/Default/PatternsAndTemplates/LiveTemplates/Template/=7EC664DD87D92B4597E98D2DB47BF0DC/Field/=ENDS/Order/@EntryValue" value="0" type="long" />
   </component>
 </project>
