@@ -7,8 +7,8 @@ module engine;
 namespace Engine {
     Camera::Camera(const glm::vec3 _position): position(_position), front(glm::vec3(0.0, 0.0, -1.0)), up( glm::vec3(0.0, 1.0,  0.0)), view(glm::lookAt(position, position + front, up)) {}
 
-    glm::mat4* Camera::getView() {
-        return &view;
+    glm::mat4 &Camera::getView() {
+        return view;
     }
 
     void Camera::updateView() {

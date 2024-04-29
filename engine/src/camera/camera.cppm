@@ -10,7 +10,7 @@ export namespace Engine {
     public:
         explicit Camera(glm::vec3 position);
 
-        glm::mat4 *getView();
+        glm::mat4 &getView();
         [[nodiscard]] float getPitch() const;
         [[nodiscard]] float getYaw() const;
         [[nodiscard]] float getSensitivity() const;
