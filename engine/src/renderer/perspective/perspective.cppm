@@ -7,7 +7,7 @@ export namespace Engine {
     public:
         explicit PerspectiveRenderer(Camera &camera_,
                                      const std::vector<std::reference_wrapper<Renderable>> &renderables_,
-                                     const Shader &shader_);
+                                     const std::span<std::reference_wrapper<Shader>> &shaders_);
         void render() override;
 
     private:
