@@ -1,7 +1,7 @@
 module;
 #include <glm/glm.hpp>
 #include <glm/vec2.hpp>
-#include <string>
+#include <string_view>
 export module engine:renderable.text;
 import :renderable;
 import :font;
@@ -9,19 +9,18 @@ import :font;
 export namespace Engine {
     class Text final : public Renderable {
     public:
-        Text(const std::string &content_, const glm::vec2 &position_, const glm::vec3 &color_,
-             float scale_, const Font &font_);
+        Text(std::string_view content_, const glm::vec3 &position_, const glm::vec3 &color_, float scale_, Font &font_,
+             const Shader &shader_);
 
         void render() override;
 
         ~Text() override;
 
+        void setContent(std::string_view content_) ;
+
     private:
         std::string content;
-        glm::vec2 position;
-        glm::vec3 color;
         float scale;
-        Font font;
-        const Shader shader;
+        Font &font;
     };
 } // namespace Engine
