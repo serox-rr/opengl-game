@@ -20,6 +20,8 @@ export namespace Engine {
 
         void setMat4(const std::string &name, const glm::mat4 &matrix) const;
 
+        void setMat3(const std::string &name, const glm::mat3 &matrix) const;
+
         void setVec3(const std::string &name, const glm::vec3 &vec3) const;
 
         [[nodiscard]] unsigned getId() const;

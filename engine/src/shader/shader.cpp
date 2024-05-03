@@ -69,17 +69,34 @@ namespace Engine {
     void Shader::use() const { glUseProgram(ID); }
 
     void Shader::setBool(const std::string &name, const bool value) const {
+        if(!uniforms.contains(name)) return;
         glUniform1i(uniforms.at(name), static_cast<int>(value));
     }
 
-    void Shader::setInt(const std::string &name, const int value) const { glUniform1i(uniforms.at(name), value); }
+    void Shader::setInt(const std::string &name, const int value) const {
+        if(!uniforms.contains(name)) return;
+        glUniform1i(uniforms.at(name), value);
+    }
 
-    void Shader::setFloat(const std::string &name, const float value) const { glUniform1f(uniforms.at(name), value); }
+    void Shader::setFloat(const std::string &name, const float value) const {
+        if(!uniforms.contains(name)) return;
+        glUniform1f(uniforms.at(name), value);
+    }
 
     void Shader::setVec3(const std::string &name, const glm::vec3 &vec3) const {
+        if(!uniforms.contains(name)) return;
         glUniform3f(uniforms.at(name), vec3.x, vec3.y, vec3.y);
     }
 
+    void Shader::setMat4(const std::string &name, const glm::mat4 &matrix) const {
+        if(!uniforms.contains(name)) return;
+        glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, glm::value_ptr(matrix));
+    }
+
+    void Shader::setMat3(const std::string &name, const glm::mat3 &matrix) const {
+        if(!uniforms.contains(name)) return;
+        glUniformMatrix3fv(uniforms.at(name), 1, GL_FALSE, glm::value_ptr(matrix));
+    }
 
     void Shader::checkCompileErrors(const unsigned int shader, const std::string &type) {
         int success;
@@ -100,10 +117,6 @@ namespace Engine {
                           << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
             }
         }
-    }
-
-    void Shader::setMat4(const std::string &name, const glm::mat4 &matrix) const {
-        glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
     unsigned Shader::getId() const { return ID; }
