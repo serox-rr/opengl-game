@@ -9,7 +9,7 @@ module engine;
 
 namespace Engine {
     Light::Light(const glm::vec3 &color, const glm::vec3 &position_, const Shader &shader_):Renderable(0,0, color, position_, {}, shader_) {
-        vertex = std::vector({
+        vertices = std::vector({
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
              0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
              0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -57,8 +57,8 @@ namespace Engine {
         glGenBuffers(1, &vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER,
-                     sizeof(float) * vertex.size(), // size of vertices buffer
-                     &vertex[0], // pointer to first element
+                     sizeof(float) * vertices.size(), // size of vertices buffer
+                     &vertices[0], // pointer to first element
                      GL_STATIC_DRAW);
 
         // position attribute
