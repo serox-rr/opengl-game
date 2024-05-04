@@ -1,5 +1,5 @@
 module;
-#include <string>
+
 export module engine;
 export import :camera;
 export import :shader;
@@ -13,6 +13,7 @@ export import :renderable;
 export import :renderable.terrain;
 export import :renderable.text;
 export import :renderable.light;
+export import :renderable.vectors;
 
 export namespace Engine {
     void init();
