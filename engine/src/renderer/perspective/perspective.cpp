@@ -28,6 +28,7 @@ namespace Engine {
             shader.setMat4("transpose", transpose);
             shader.setVec3("lightColor", renderable2.getColor());
             shader.setVec3("lightPos", renderable2.getPosition());
+            shader.setVec3("viewPos", camera.getPosition());
         });
         std::ranges::for_each(renderables.begin(), renderables.end(), [&](Renderable &renderable) {
             glm::mat4 model(1.0f);
