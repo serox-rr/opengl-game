@@ -1,10 +1,13 @@
 module;
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <complex>
 #include <filesystem>
+#include <functional>
 #include <glm/glm.hpp>
 #include <iostream>
-#include <map>
+#include <span>
+#include <numbers>
 module game;
 
 import engine;
@@ -19,21 +22,31 @@ int main() {
         Engine::init();
         Engine::windows.emplace_back(1920, 1080);
         Engine::windows[0].setInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        Engine::windows[0].disableVSYNC();
         Engine::settings();
-        Engine::Shader shader(R"(../../../engine/shaders/perspective/perspective.vert)",
-                              R"(../../../engine/shaders/perspective/perspective.frag)",
-                              {"transpose", "time", "model"});
         camera.setSpeed(10.0f);
         int frameAmount = 0;
         float startTime = glfwGetTime();
-        Engine::Terrain terrain{};
-        Engine::Light light{};
         Engine::Font inter("../../../game/ressources/fonts/Inter-VariableFont_slnt,wght.ttf");
-        Engine::Text text("Hello world !", glm::vec2(0, 0), glm::vec3(1.0, 1.0, 1.0), 1.0f, inter);
-        Engine::Shader perspectiveShader("../../../engine/shaders/perspective/perspective.vert",
-                                         "../../../engine/shaders/perspective/perspective.frag",
-                                         {"model", "transpose"});
-        Engine::PerspectiveRenderer perspectiveRenderer(camera, {terrain, light}, perspectiveShader);
+        const Engine::Shader textShader("../../../engine/shaders/text/text.vert",
+                                        "../../../engine/shaders/text/text.frag", {"color", "projection"});
+        const Engine::Shader perspectiveShader(
+                "../../../engine/shaders/perspective/perspective.vert",
+                "../../../engine/shaders/perspective/perspective.frag",
+                {"model", "transpose", "objectColor", "lightColor", "lightPos", "modelNormal"});
+        const Engine::Shader vectorsShader("../../../engine/shaders/vectors/vectors.vert",
+                                           "../../../engine/shaders/vectors/vectors.frag",
+                                           {"model", "transpose", "objectColor"});
+        Engine::Terrain terrain{glm::vec3(61.0 / 255.0, 33.0 / 255.0, 23.0 / 255.0), perspectiveShader};
+        Engine::Vectors terrainVectors{glm::vec3(1, 1, 1), vectorsShader, terrain.getVertex()};
+        Engine::Light light{glm::vec3(1.0, 1.0, 1.0), glm::vec3(50, 10, sin(glfwGetTime()) * 20 + 50), vectorsShader};
+        Engine::Vectors lightVectors{glm::vec3(1, 1, 1), vectorsShader, light.getVertex()};
+        Engine::Text coordsText("142", glm::vec3(100, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
+        Engine::Text fpsText("fps: 0", glm::vec3(0, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
+        std::reference_wrapper<const Engine::Shader> perspectiveShaders[] = {std::reference_wrapper(perspectiveShader),
+                                                                             std::reference_wrapper(vectorsShader)};
+        Engine::PerspectiveRenderer perspectiveRenderer(camera, {terrain, light, lightVectors, /*terrainVectors*/},
+                                                        perspectiveShaders);
         while (!glfwWindowShouldClose(Engine::windows[0])) {
             // input
             // -----
@@ -42,15 +55,25 @@ int main() {
             Game::processInput(Engine::windows[0]);
             glfwSetCursorPosCallback(Engine::windows[0], Game::mouse_callback);
             glfwSetScrollCallback(Engine::windows[0], Game::scroll_callback);
-            text.render();
+            double teta = std::fmod(glfwGetTime(), 100)/50*std::numbers::pi*10;
+            double r = 10000;
+            double zLight = r*cos(teta);
+            double yLight = r*sin(teta);
+            light.setColor(glm::vec3(1, 1, 1));
+            light.setPosition(glm::vec3(5000, yLight, zLight+5000));
+            coordsText.render();
+            fpsText.render();
             perspectiveRenderer.render();
             float currentFrame = glfwGetTime();
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
+            auto pos = camera.getPosition();
+            coordsText.setContent("X: " + std::to_string(pos.x) + " Y: " + std::to_string(pos.y) +
+                                  " Z: " + std::to_string(pos.z));
             glfwSwapBuffers(Engine::windows[0]);
             glfwPollEvents();
             if (glfwGetTime() - startTime > 1.0f) {
-                std::cout << frameAmount << " fps" << std::endl;
+                fpsText.setContent("fps: " + std::to_string(frameAmount));
                 startTime = glfwGetTime();
                 frameAmount = 0;
             }
@@ -66,7 +89,7 @@ int main() {
 }
 
 void Game::processInput(GLFWwindow *window) {
-    camera.setSpeed(10.0f * deltaTime);
+    camera.setSpeed(500.0f * deltaTime);
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
