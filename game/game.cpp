@@ -33,7 +33,7 @@ int main() {
         const Engine::Shader perspectiveShader(
                 "../../../engine/shaders/perspective/perspective.vert",
                 "../../../engine/shaders/perspective/perspective.frag",
-                {"model", "transpose", "objectColor", "lightColor", "lightPos", "modelNormal"});
+                {"model", "transpose", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos"});
         const Engine::Shader vectorsShader("../../../engine/shaders/vectors/vectors.vert",
                                            "../../../engine/shaders/vectors/vectors.frag",
                                            {"model", "transpose", "objectColor"});
@@ -60,7 +60,7 @@ int main() {
             double zLight = r*cos(teta);
             double yLight = r*sin(teta);
             light.setColor(glm::vec3(1, 1, 1));
-            light.setPosition(glm::vec3(5000, yLight, zLight+5000));
+            light.setPosition(glm::vec3(5000, 5000, 5000));
             coordsText.render();
             fpsText.render();
             perspectiveRenderer.render();
