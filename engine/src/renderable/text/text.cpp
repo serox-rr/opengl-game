@@ -12,7 +12,7 @@ import :shader;
 namespace Engine {
     Text::Text(std::string_view content_, const glm::vec3 &position_, const glm::vec3 &color_, const float scale_,
                Font &font_, const Shader &shader_) :
-        Renderable(0, 0, color_, position_, shader_), content(content_), scale(scale_), font(font_){
+        Renderable(0, 0, color_, position_, {}, shader_), content(content_), scale(scale_), font(font_) {
         glGenVertexArrays(1, &vao);
         glGenBuffers(1, &vbo);
         glBindVertexArray(vao);
@@ -65,7 +65,5 @@ namespace Engine {
     Text::~Text() = default;
 
 
-    void Text::setContent(const std::string_view content_) {
-        content = content_;
-    }
+    void Text::setContent(const std::string_view content_) { content = content_; }
 } // namespace Engine

@@ -85,7 +85,7 @@ namespace Engine {
 
     void Shader::setVec3(const std::string &name, const glm::vec3 &vec3) const {
         if(!uniforms.contains(name)) return;
-        glUniform3f(uniforms.at(name), vec3.x, vec3.y, vec3.y);
+        glUniform3f(uniforms.at(name), vec3.x, vec3.y, vec3.z);
     }
 
     void Shader::setMat4(const std::string &name, const glm::mat4 &matrix) const {
