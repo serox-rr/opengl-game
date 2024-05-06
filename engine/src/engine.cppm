@@ -1,6 +1,7 @@
 module;
 
 export module engine;
+export import :utils;
 export import :camera;
 export import :shader;
 export import :texture;

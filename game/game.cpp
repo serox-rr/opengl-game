@@ -6,8 +6,8 @@ module;
 #include <functional>
 #include <glm/glm.hpp>
 #include <iostream>
-#include <span>
 #include <numbers>
+#include <span>
 module game;
 
 import engine;
@@ -26,17 +26,22 @@ int main() {
         Engine::settings();
         camera.setSpeed(10.0f);
         int frameAmount = 0;
-        float startTime = glfwGetTime();
+        double startTime = glfwGetTime();
         Engine::Font inter("../../../game/ressources/fonts/Inter-VariableFont_slnt,wght.ttf");
-        const Engine::Shader textShader("../../../engine/shaders/text/text.vert",
-                                        "../../../engine/shaders/text/text.frag", {"color", "projection"});
+
+        const Engine::Shader textShader({"color", "projection"}, "../../../engine/shaders/text/text.vert",
+                                        "../../../engine/shaders/text/text.frag", std::nullopt, std::nullopt,
+                                        std::nullopt);
+
         const Engine::Shader perspectiveShader(
+                {"model", "transpose", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos"},
                 "../../../engine/shaders/perspective/perspective.vert",
-                "../../../engine/shaders/perspective/perspective.frag",
-                {"model", "transpose", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos"});
-        const Engine::Shader vectorsShader("../../../engine/shaders/vectors/vectors.vert",
-                                           "../../../engine/shaders/vectors/vectors.frag",
-                                           {"model", "transpose", "objectColor"});
+                "../../../engine/shaders/perspective/perspective.frag", std::nullopt, std::nullopt, std::nullopt);
+
+        const Engine::Shader vectorsShader(
+                {"model", "transpose", "objectColor"}, "../../../engine/shaders/vectors/vectors.vert",
+                "../../../engine/shaders/vectors/vectors.frag", std::nullopt, std::nullopt, std::nullopt);
+
         Engine::Terrain terrain{glm::vec3(61.0 / 255.0, 33.0 / 255.0, 23.0 / 255.0), perspectiveShader};
         Engine::Vectors terrainVectors{glm::vec3(1, 1, 1), vectorsShader, terrain.getVertex()};
         Engine::Light light{glm::vec3(1.0, 1.0, 1.0), glm::vec3(50, 10, sin(glfwGetTime()) * 20 + 50), vectorsShader};
@@ -55,16 +60,16 @@ int main() {
             Game::processInput(Engine::windows[0]);
             glfwSetCursorPosCallback(Engine::windows[0], Game::mouse_callback);
             glfwSetScrollCallback(Engine::windows[0], Game::scroll_callback);
-            double teta = std::fmod(glfwGetTime(), 100)/50*std::numbers::pi*10;
+            double teta = std::fmod(glfwGetTime(), 100) / 50 * std::numbers::pi * 10;
             double r = 10000;
-            double zLight = r*cos(teta);
-            double yLight = r*sin(teta);
+            double zLight = r * cos(teta);
+            double yLight = r * sin(teta);
             light.setColor(glm::vec3(1, 1, 1));
             light.setPosition(glm::vec3(5000, 5000, 5000));
             coordsText.render();
             fpsText.render();
             perspectiveRenderer.render();
-            float currentFrame = glfwGetTime();
+            double currentFrame = glfwGetTime();
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
             auto pos = camera.getPosition();
