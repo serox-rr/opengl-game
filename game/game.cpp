@@ -42,7 +42,7 @@ int main() {
                 "../../../engine/shaders/vectors/vectors.frag", std::nullopt, std::nullopt, std::nullopt);
 
         const Engine::Shader terrainShader(
-                {"transpose", "model", "heightMap", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos", "uTexelSize"}, "../../../engine/shaders/terrain/terrain.vert",
+                {"transpose", "model", "heightMap", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos"}, "../../../engine/shaders/terrain/terrain.vert",
                 "../../../engine/shaders/terrain/terrain.frag", std::nullopt, "../../../engine/shaders/terrain/terrain.tesc",
                                         "../../../engine/shaders/terrain/terrain.tese");
 

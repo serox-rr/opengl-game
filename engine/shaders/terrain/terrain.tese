@@ -4,7 +4,6 @@ layout(quads, fractional_odd_spacing, ccw) in;
 uniform sampler2D heightMap;
 uniform mat4 model;
 uniform mat4 transpose;
-uniform float uTexelSize;
 
 in vec2 TextureCoord[];
 out float Height;

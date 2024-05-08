@@ -29,7 +29,6 @@ namespace Engine {
 
         shader.use();
         shader.setInt("heightMap", 2);
-        shader.setFloat("uTexelSize", 1.0f / width);
         shader.setVec3("objectColor", color);
         for (unsigned i = 0; i <= rez - 1; i++) {
             for (unsigned j = 0; j <= rez - 1; j++) {
