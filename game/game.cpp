@@ -22,7 +22,7 @@ int main() {
         Engine::init();
         Engine::windows.emplace_back(1920, 1080);
         Engine::windows[0].setInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        Engine::windows[0].disableVSYNC();
+        //Engine::windows[0].disableVSYNC();
         Engine::settings();
         camera.setSpeed(10.0f);
         int frameAmount = 0;
@@ -30,8 +30,7 @@ int main() {
         Engine::Font inter("../../../game/ressources/fonts/Inter-VariableFont_slnt,wght.ttf");
 
         const Engine::Shader textShader({"color", "projection"}, "../../../engine/shaders/text/text.vert",
-                                        "../../../engine/shaders/text/text.frag", std::nullopt, std::nullopt,
-                                        std::nullopt);
+                                        "../../../engine/shaders/text/text.frag", std::nullopt, std::nullopt, std::nullopt);
 
         const Engine::Shader perspectiveShader(
                 {"model", "transpose", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos"},
@@ -42,15 +41,18 @@ int main() {
                 {"model", "transpose", "objectColor"}, "../../../engine/shaders/vectors/vectors.vert",
                 "../../../engine/shaders/vectors/vectors.frag", std::nullopt, std::nullopt, std::nullopt);
 
-        Engine::Terrain terrain{glm::vec3(61.0 / 255.0, 33.0 / 255.0, 23.0 / 255.0), perspectiveShader};
-        Engine::Vectors terrainVectors{glm::vec3(1, 1, 1), vectorsShader, terrain.getVertex()};
+        const Engine::Shader terrainShader(
+                {"transpose", "model", "heightMap", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos", "uTexelSize"}, "../../../engine/shaders/terrain/terrain.vert",
+                "../../../engine/shaders/terrain/terrain.frag", std::nullopt, "../../../engine/shaders/terrain/terrain.tesc",
+                                        "../../../engine/shaders/terrain/terrain.tese");
+
+        Engine::Terrain terrain{glm::vec3(61.0 / 255.0, 33.0 / 255.0, 23.0 / 255.0), terrainShader};
         Engine::Light light{glm::vec3(1.0, 1.0, 1.0), glm::vec3(50, 10, sin(glfwGetTime()) * 20 + 50), vectorsShader};
-        Engine::Vectors lightVectors{glm::vec3(1, 1, 1), vectorsShader, light.getVertex()};
         Engine::Text coordsText("142", glm::vec3(100, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
         Engine::Text fpsText("fps: 0", glm::vec3(0, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
         std::reference_wrapper<const Engine::Shader> perspectiveShaders[] = {std::reference_wrapper(perspectiveShader),
-                                                                             std::reference_wrapper(vectorsShader)};
-        Engine::PerspectiveRenderer perspectiveRenderer(camera, {terrain, light, lightVectors, /*terrainVectors*/},
+                                                                             std::reference_wrapper(vectorsShader), std::reference_wrapper(terrainShader)};
+        Engine::PerspectiveRenderer perspectiveRenderer(camera, {terrain, light},
                                                         perspectiveShaders);
         while (!glfwWindowShouldClose(Engine::windows[0])) {
             // input
@@ -61,11 +63,11 @@ int main() {
             glfwSetCursorPosCallback(Engine::windows[0], Game::mouse_callback);
             glfwSetScrollCallback(Engine::windows[0], Game::scroll_callback);
             double teta = std::fmod(glfwGetTime(), 100) / 50 * std::numbers::pi * 10;
-            double r = 10000;
+            double r = 500;
             double zLight = r * cos(teta);
-            double yLight = r * sin(teta);
+            double yLight = r * abs(sin(teta));
             light.setColor(glm::vec3(1, 1, 1));
-            light.setPosition(glm::vec3(5000, 5000, 5000));
+            light.setPosition(glm::vec3(0, yLight, zLight));
             coordsText.render();
             fpsText.render();
             perspectiveRenderer.render();

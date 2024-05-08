@@ -15,7 +15,7 @@ export namespace Engine {
 
 
     private:
-        unsigned width, height;
+        int  width, height, rez;
         glm::vec3 position;
     };
 }

@@ -1,13 +1,13 @@
 module;
 
 export module engine:texture;
-
 export namespace Engine {
     class Texture {
     public:
-        Texture(const char *texturePath, unsigned int textureUnit, const char* imageType);
+        Texture(const char *texturePath, unsigned int textureUnit, const char *imageType);
         [[nodiscard]] unsigned get() const;
+
     private:
         unsigned ID;
     };
-}
+} // namespace Engine

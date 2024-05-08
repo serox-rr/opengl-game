@@ -1,78 +1,85 @@
 module;
 #include <FastNoise/FastNoise.h>
 #include <glad/glad.h>
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
+#include <iostream>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image.h>
+#define STBI_MSC_SECURE_CRT
+#include <stb_image_write.h>
 #include <vector>
 module engine;
 
 namespace Engine {
     Terrain::Terrain(const glm::vec3 &color, const Shader &shader_) :
-        Renderable(0, 0, color, glm::vec3(0,0,0), {}, shader_), width(1000), height(1000), position(0,0,0) {
-        GLuint ebo;
-        const FastNoise::SmartNode<> fnGenerator = FastNoise::NewFromEncodedNodeTree("IgD2KLxApHA9PwcA");//
-        std::vector<float> noiseOutput(width * height);
-        fnGenerator->GenUniformGrid2D(noiseOutput.data(), 0, 0, width, height, 0.009f, 300);
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                glm::vec3 p1(i * 10, noiseOutput[i * height + j] * 500, j * 10);
-                const int widthOffset = (i != width - 1) * 2 - 1;
-                glm::vec3 p2((i + widthOffset) * 10, noiseOutput[(i + widthOffset) * height + j] * 500, j * 10);
-                const int heightOffset = (i != height - 1) * 2 - 1;
-                glm::vec3 p3(i * 10, noiseOutput[i * height + (j + heightOffset)] * 500, (j + heightOffset) * 10);
-                glm::vec3 normal = glm::abs(glm::normalize(glm::cross(p2 - p1, p3 - p1)));
-                auto a = {p1.x, p1.y, p1.z, normal.x, normal.y, normal.z};
-                vertex.insert(vertex.end(), a);
+        Renderable(0, 0, color, glm::vec3(0, 0, 0), {}, shader_), width(1000), height(1000), rez(20),
+        position(0, 0, 0) {
+
+        const FastNoise::SmartNode<> fnGenerator =
+                FastNoise::NewFromEncodedNodeTree("GgABDwACAAAAcT3KPwcAABSuRz8AmpmZvgEJAA==");
+        std::vector<float> noise(width * height);
+        fnGenerator->GenUniformGrid2D(noise.data(), 0, 0, width, height, 0.009f, 300);
+        unsigned int texture;
+        glGenTextures(1, &texture);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D,
+                      texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_FLOAT, noise.data());
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        shader.use();
+        shader.setInt("heightMap", 2);
+        shader.setFloat("uTexelSize", 1.0f / width);
+        shader.setVec3("objectColor", color);
+        for (unsigned i = 0; i <= rez - 1; i++) {
+            for (unsigned j = 0; j <= rez - 1; j++) {
+                vertices.push_back(-width / 2.0f + width * i / (float)rez); // v.x
+                vertices.push_back(0.0f); // v.y
+                vertices.push_back(-height / 2.0f + height * j / (float)rez); // v.z
+                vertices.push_back(i / (float)rez); // u
+                vertices.push_back(j / (float)rez); // v
+
+                vertices.push_back(-width / 2.0f + width * (i + 1) / (float)rez); // v.x
+                vertices.push_back(0.0f); // v.y
+                vertices.push_back(-height / 2.0f + height * j / (float)rez); // v.z
+                vertices.push_back((i + 1) / (float)rez); // u
+                vertices.push_back(j / (float)rez); // v
+
+                vertices.push_back(-width / 2.0f + width * i / (float)rez); // v.x
+                vertices.push_back(0.0f); // v.y
+                vertices.push_back(-height / 2.0f + height * (j + 1) / (float)rez); // v.z
+                vertices.push_back(i / (float)rez); // u
+                vertices.push_back((j + 1) / (float)rez); // v
+
+                vertices.push_back(-width / 2.0f + width * (i + 1) / (float)rez); // v.x
+                vertices.push_back(0.0f); // v.y
+                vertices.push_back(-height / 2.0f + height * (j + 1) / (float)rez); // v.z
+                vertices.push_back((i + 1) / (float)rez); // u
+                vertices.push_back((j + 1) / (float)rez); // v
             }
         }
-        std::vector<unsigned> indices = {};
-        for (unsigned int i = 0; i < height - 1; i++) // for each row a.k.a. each strip
-        {
-            for (unsigned int j = 0; j < width; j++) // for each column
-            {
-                for (unsigned int k = 0; k < 2; k++) // for each side of the strip
-                {
-                    indices.push_back(j + width * (i + k));
-                }
-            }
-        }
+
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
+
         glGenBuffers(1, &vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER,
-                     vertex.size() * sizeof(float), // size of vertices buffer
-                     &vertex[0], // pointer to first element
-                     GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
         // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
         glEnableVertexAttribArray(0);
-        // Normals
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+        // texCoord attribute
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(sizeof(float) * 3));
         glEnableVertexAttribArray(1);
 
-        glGenBuffers(1, &ebo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     indices.size() * sizeof(unsigned int), // size of indices buffer
-                     &indices[0], // pointer to first element
-                     GL_STATIC_DRAW);
+        glPatchParameteri(GL_PATCH_VERTICES, 4);
     }
 
     void Terrain::render() {
-        shader.use();
-        shader.setVec3("objectColor", color);
         // draw mesh
         glBindVertexArray(vao);
-        // render the mesh triangle strip by triangle strip - each row at a time
-        for (unsigned int strip = 0; strip < width - 1; ++strip) {
-            glDrawElements(GL_TRIANGLE_STRIP, // primitive type
-                           height * 2, // number of indices to render
-                           GL_UNSIGNED_INT, // index data type
-                           (void *)(sizeof(unsigned int) * height * 2 * strip)); // offset to starting index
-        }
+        glDrawArrays(GL_PATCHES, 0, 4 * rez * rez);
     }
 
     Terrain::~Terrain() = default;

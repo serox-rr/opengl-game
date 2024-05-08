@@ -28,14 +28,14 @@ namespace Engine {
             shader.setMat4("transpose", transpose);
             shader.setVec3("lightColor", renderable2.getColor());
             shader.setVec3("lightPos", renderable2.getPosition());
-            shader.setVec3("viewPos", camera.getPosition());
         });
         std::ranges::for_each(renderables.begin(), renderables.end(), [&](Renderable &renderable) {
             glm::mat4 model(1.0f);
             model = glm::translate(model, renderable.getPosition());
-            renderable.getShader().use();
-            renderable.getShader().setMat4("model", model);
-            renderable.getShader().setMat3("modelNormal", glm::transpose(glm::inverse(glm::mat3(1.0f))));
+            const auto shader = renderable.getShader();
+            shader.use();
+            shader.setMat4("model", model);
+            shader.setMat3("modelNormal", glm::transpose(glm::inverse(glm::mat3(1.0f))));
             renderable.render();
         });
     }

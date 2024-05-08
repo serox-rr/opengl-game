@@ -71,8 +71,8 @@ namespace Engine {
 
     void Light::render() {
         shader.use();
-        shader.setMat4("model", glm::scale(glm::translate(glm::mat4(1.0f), position), glm::vec3(100,100,100)));
-        shader.setVec3("objectColor", glm::vec3(1,1,1));
+        shader.setMat4("model", glm::scale(glm::translate(glm::mat4(1.0f), position), glm::vec3(100, 100, 100)));
+        shader.setVec3("objectColor", glm::vec3(1, 1, 1));
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
