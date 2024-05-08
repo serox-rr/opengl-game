@@ -15,11 +15,16 @@ export import :renderable.terrain;
 export import :renderable.text;
 export import :renderable.light;
 export import :renderable.vectors;
+export import :collisions;
 export import :entity;
+export import :entity.player;
 
 export namespace Engine {
     void init();
     void settings();
+    void updateTime();
 
     std::vector<Window> windows({});
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
 }
