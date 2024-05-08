@@ -15,6 +15,7 @@ export import :renderable.terrain;
 export import :renderable.text;
 export import :renderable.light;
 export import :renderable.vectors;
+export import :entity;
 
 export namespace Engine {
     void init();
