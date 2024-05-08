@@ -12,17 +12,14 @@ module game;
 
 import engine;
 
-float deltaTime = 0.0f; // Time between current frame and last frame
-float lastFrame = 0.0f; // Time of last frame
-bool firstMouse = true;
-Engine::Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-
 int main() {
     try {
         Engine::init();
         Engine::windows.emplace_back(1920, 1080);
         Engine::windows[0].setInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        //Engine::windows[0].disableVSYNC();
+        // Engine::windows[0].disableVSYNC();)
+        Engine::Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+        Engine::Player player(glm::vec3(0.0, 0.0, 0.0), -90.0, 0.0, 10, camera);
         Engine::settings();
         camera.setSpeed(10.0f);
         int frameAmount = 0;
@@ -30,7 +27,8 @@ int main() {
         Engine::Font inter("../../../game/ressources/fonts/Inter-VariableFont_slnt,wght.ttf");
 
         const Engine::Shader textShader({"color", "projection"}, "../../../engine/shaders/text/text.vert",
-                                        "../../../engine/shaders/text/text.frag", std::nullopt, std::nullopt, std::nullopt);
+                                        "../../../engine/shaders/text/text.frag", std::nullopt, std::nullopt,
+                                        std::nullopt);
 
         const Engine::Shader perspectiveShader(
                 {"model", "transpose", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos"},
@@ -42,26 +40,23 @@ int main() {
                 "../../../engine/shaders/vectors/vectors.frag", std::nullopt, std::nullopt, std::nullopt);
 
         const Engine::Shader terrainShader(
-                {"transpose", "model", "heightMap", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos"}, "../../../engine/shaders/terrain/terrain.vert",
-                "../../../engine/shaders/terrain/terrain.frag", std::nullopt, "../../../engine/shaders/terrain/terrain.tesc",
-                                        "../../../engine/shaders/terrain/terrain.tese");
+                {"transpose", "model", "heightMap", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos"},
+                "../../../engine/shaders/terrain/terrain.vert", "../../../engine/shaders/terrain/terrain.frag",
+                std::nullopt, "../../../engine/shaders/terrain/terrain.tesc",
+                "../../../engine/shaders/terrain/terrain.tese");
 
         Engine::Terrain terrain{glm::vec3(61.0 / 255.0, 33.0 / 255.0, 23.0 / 255.0), terrainShader};
         Engine::Light light{glm::vec3(1.0, 1.0, 1.0), glm::vec3(50, 10, sin(glfwGetTime()) * 20 + 50), vectorsShader};
         Engine::Text coordsText("142", glm::vec3(100, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
         Engine::Text fpsText("fps: 0", glm::vec3(0, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
         std::reference_wrapper<const Engine::Shader> perspectiveShaders[] = {std::reference_wrapper(perspectiveShader),
-                                                                             std::reference_wrapper(vectorsShader), std::reference_wrapper(terrainShader)};
-        Engine::PerspectiveRenderer perspectiveRenderer(camera, {terrain, light},
-                                                        perspectiveShaders);
+                                                                             std::reference_wrapper(vectorsShader),
+                                                                             std::reference_wrapper(terrainShader)};
+        Engine::PerspectiveRenderer perspectiveRenderer(camera, {terrain, light}, perspectiveShaders);
         while (!glfwWindowShouldClose(Engine::windows[0])) {
-            // input
-            // -----
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            Game::processInput(Engine::windows[0]);
-            glfwSetCursorPosCallback(Engine::windows[0], Game::mouse_callback);
-            glfwSetScrollCallback(Engine::windows[0], Game::scroll_callback);
+            Engine::updateTime();
             double teta = std::fmod(glfwGetTime(), 100) / 50 * std::numbers::pi * 10;
             double r = 500;
             double zLight = r * cos(teta);
@@ -71,10 +66,8 @@ int main() {
             coordsText.render();
             fpsText.render();
             perspectiveRenderer.render();
-            double currentFrame = glfwGetTime();
-            deltaTime = currentFrame - lastFrame;
-            lastFrame = currentFrame;
-            auto pos = camera.getPosition();
+            player.processInput(Engine::windows[0]);
+            auto pos = player.getPosition();
             coordsText.setContent("X: " + std::to_string(pos.x) + " Y: " + std::to_string(pos.y) +
                                   " Z: " + std::to_string(pos.z));
             glfwSwapBuffers(Engine::windows[0]);
@@ -93,45 +86,4 @@ int main() {
         return -1;
     }
     return 0;
-}
-
-void Game::processInput(GLFWwindow *window) {
-    camera.setSpeed(500.0f * deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        camera.moveForward();
-    }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.moveBackward();
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.moveLeft();
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.moveRight();
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        camera.moveUp();
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-        camera.moveDown();
-}
-
-float lastX = 400, lastY = 300;
-
-void Game::mouse_callback(GLFWwindow *window, const double xpos, const double ypos) {
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
-    lastX = xpos;
-    lastY = ypos;
-    if (firstMouse) // initially set to true
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-    xoffset *= camera.getSensitivity();
-    yoffset *= camera.getSensitivity();
-    camera.setLookingDirection(camera.getYaw() + xoffset, camera.getPitch() + yoffset);
-}
-
-void Game::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-    camera.setFov(camera.getFov() - static_cast<float>(yoffset));
 }

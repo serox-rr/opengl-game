@@ -1,14 +1,20 @@
 module;
+#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
-
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 module engine;
 
 namespace Engine {
-    Entity::Entity(const glm::vec3<double> &position_, const double yaw_, const double pitch_, const double speed_) :
+    Entity::Entity(const glm::vec3 position_, const double yaw_, const double pitch_, const double speed_) :
         position(position_), front(glm::vec3(0.0, 0.0, -1.0)), up(glm::vec3(0.0, 1.0, 0.0)), yaw(yaw_), pitch(pitch_),
         speed(speed_) {}
 
-    void Entity::setPosition(const glm::vec3 position_) { position = position_; }
+
+    void Entity::setPosition(const glm::vec3 position_) {
+        position = position_;
+        update();
+    }
 
     void Entity::setLookingDirection(float _yaw, float _pitch) {
         yaw = _yaw;
@@ -22,9 +28,13 @@ namespace Engine {
         direction.y = sin(glm::radians(pitch));
         direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
         front = glm::normalize(direction);
+        update();
     }
 
-    void Entity::addPosition(const glm::vec3 position_) { position += position_; }
+    void Entity::addPosition(const glm::vec3 position_) {
+        position += position_;
+        update();
+    }
 
     void Entity::moveRight() { addPosition(glm::normalize(glm::cross(front, up)) * speed); }
 
