@@ -12,19 +12,17 @@ module engine;
 
 namespace Engine {
     Terrain::Terrain(const glm::vec3 &color, const Shader &shader_) :
-        Renderable(0, 0, color, glm::vec3(0, 0, 0), {}, shader_), width(1000), height(1000), rez(20),
-        position(0, 0, 0) {
+        Renderable(0, 0, color, glm::vec3(0, 0, 0), {}, shader_), width(1000), height(1000), rez(20), position(0, 0, 0),
+        heightMap(width * height) {
 
         const FastNoise::SmartNode<> fnGenerator =
-                FastNoise::NewFromEncodedNodeTree("GgABDwACAAAAcT3KPwcAABSuRz8AmpmZvgEJAA==");
-        std::vector<float> noise(width * height);
-        fnGenerator->GenUniformGrid2D(noise.data(), 0, 0, width, height, 0.009f, 300);
+                FastNoise::NewFromEncodedNodeTree("HAABGQAHAAAAAIA/AAAAAEA=");
+        fnGenerator->GenUniformGrid2D(heightMap.data(), 0, 0, width, height, 0.009f, 300);
         unsigned int texture;
         glGenTextures(1, &texture);
         glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D,
-                      texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_FLOAT, noise.data());
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_FLOAT, heightMap.data());
         glGenerateMipmap(GL_TEXTURE_2D);
 
         shader.use();
@@ -32,34 +30,35 @@ namespace Engine {
         shader.setVec3("objectColor", color);
         for (unsigned i = 0; i <= rez - 1; i++) {
             for (unsigned j = 0; j <= rez - 1; j++) {
-                vertices.push_back(-width / 2.0f + width * i / (float)rez); // v.x
+                vertices.push_back(-width / 2.0f + width * i / static_cast<float>(rez)); // v.x
                 vertices.push_back(0.0f); // v.y
-                vertices.push_back(-height / 2.0f + height * j / (float)rez); // v.z
-                vertices.push_back(i / (float)rez); // u
-                vertices.push_back(j / (float)rez); // v
+                vertices.push_back(-height / 2.0f + height * j / static_cast<float>(rez)); // v.z
+                vertices.push_back(i / static_cast<float>(rez)); // u
+                vertices.push_back(j / static_cast<float>(rez)); // v
 
-                vertices.push_back(-width / 2.0f + width * (i + 1) / (float)rez); // v.x
+                vertices.push_back(-width / 2.0f + width * (i + 1) / static_cast<float>(rez)); // v.x
                 vertices.push_back(0.0f); // v.y
-                vertices.push_back(-height / 2.0f + height * j / (float)rez); // v.z
-                vertices.push_back((i + 1) / (float)rez); // u
-                vertices.push_back(j / (float)rez); // v
+                vertices.push_back(-height / 2.0f + height * j / static_cast<float>(rez)); // v.z
+                vertices.push_back((i + 1) / static_cast<float>(rez)); // u
+                vertices.push_back(j / static_cast<float>(rez)); // v
 
-                vertices.push_back(-width / 2.0f + width * i / (float)rez); // v.x
+                vertices.push_back(-width / 2.0f + width * i / static_cast<float>(rez)); // v.x
                 vertices.push_back(0.0f); // v.y
-                vertices.push_back(-height / 2.0f + height * (j + 1) / (float)rez); // v.z
-                vertices.push_back(i / (float)rez); // u
-                vertices.push_back((j + 1) / (float)rez); // v
+                vertices.push_back(-height / 2.0f + height * (j + 1) / static_cast<float>(rez)); // v.z
+                vertices.push_back(i / static_cast<float>(rez)); // u
+                vertices.push_back((j + 1) / static_cast<float>(rez)); // v
 
-                vertices.push_back(-width / 2.0f + width * (i + 1) / (float)rez); // v.x
+                vertices.push_back(-width / 2.0f + width * (i + 1) / static_cast<float>(rez)); // v.x
                 vertices.push_back(0.0f); // v.y
-                vertices.push_back(-height / 2.0f + height * (j + 1) / (float)rez); // v.z
-                vertices.push_back((i + 1) / (float)rez); // u
-                vertices.push_back((j + 1) / (float)rez); // v
+                vertices.push_back(-height / 2.0f + height * (j + 1) / static_cast<float>(rez)); // v.z
+                vertices.push_back((i + 1) / static_cast<float>(rez)); // u
+                vertices.push_back((j + 1) / static_cast<float>(rez)); // v
             }
         }
 
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
         glGenBuffers(1, &vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -82,4 +81,12 @@ namespace Engine {
     }
 
     Terrain::~Terrain() = default;
+
+    const std::vector<float> &Terrain::getHeightMap() const { return heightMap; }
+
+    const int &Terrain::getWidth() const { return width; }
+
+    const int &Terrain::getHeight() const { return height; }
+
+    const int &Terrain::getRez() const { return rez; }
 } // namespace Engine

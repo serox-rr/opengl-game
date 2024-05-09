@@ -18,8 +18,7 @@ int main() {
         Engine::windows.emplace_back(1920, 1080);
         Engine::windows[0].setInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         // Engine::windows[0].disableVSYNC();)
-        Engine::Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
-        Engine::Player player(glm::vec3(0.0, 0.0, 0.0), -90.0, 0.0, 10, camera);
+        Engine::Camera camera(glm::vec3(0.0f, 70.0f, 0.0f));
         Engine::settings();
         camera.setSpeed(10.0f);
         int frameAmount = 0;
@@ -49,6 +48,8 @@ int main() {
         Engine::Light light{glm::vec3(1.0, 1.0, 1.0), glm::vec3(50, 10, sin(glfwGetTime()) * 20 + 50), vectorsShader};
         Engine::Text coordsText("142", glm::vec3(100, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
         Engine::Text fpsText("fps: 0", glm::vec3(0, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
+        std::initializer_list<std::reference_wrapper<const Engine::Renderable>> collidables = {std::reference_wrapper(terrain)};
+        Engine::Player player(glm::vec3(0.0, 70.0f, 0.0), -90.0, 0.0, 10, camera, collidables);
         std::reference_wrapper<const Engine::Shader> perspectiveShaders[] = {std::reference_wrapper(perspectiveShader),
                                                                              std::reference_wrapper(vectorsShader),
                                                                              std::reference_wrapper(terrainShader)};

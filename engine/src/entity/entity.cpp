@@ -1,24 +1,27 @@
 module;
-#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 module engine;
 
 namespace Engine {
-    Entity::Entity(const glm::vec3 position_, const double yaw_, const double pitch_, const double speed_) :
+    Entity::Entity(const glm::vec3 position_, const double yaw_, const double pitch_, const double speed_, const std::initializer_list<std::reference_wrapper<const Renderable>> &collidables_) :
         position(position_), front(glm::vec3(0.0, 0.0, -1.0)), up(glm::vec3(0.0, 1.0, 0.0)), yaw(yaw_), pitch(pitch_),
-        speed(speed_) {}
+        speed(speed_), collidables(collidables_) {}
 
 
     void Entity::setPosition(const glm::vec3 position_) {
-        position = position_;
+        position = Collisions::check(this, collidables, position_);
         update();
     }
 
-    void Entity::setLookingDirection(float _yaw, float _pitch) {
-        yaw = _yaw;
-        pitch = _pitch;
+    void Entity::addPosition(const glm::vec3 position_) {
+        setPosition(position + position_);
+    }
+
+    void Entity::setLookingDirection(const float yaw_, const float pitch_) {
+        yaw = yaw_;
+        pitch = pitch_;
         if (pitch > 89.0f)
             pitch = 89.0f;
         if (pitch < -89.0f)
@@ -31,10 +34,6 @@ namespace Engine {
         update();
     }
 
-    void Entity::addPosition(const glm::vec3 position_) {
-        position += position_;
-        update();
-    }
 
     void Entity::moveRight() { addPosition(glm::normalize(glm::cross(front, up)) * speed); }
 

@@ -6,8 +6,8 @@ module engine;
 
 namespace Engine {
     Player::Player(const glm::vec3 &position_, const double yaw_, const double pitch_, const double speed_,
-                   Camera &camera_) :
-        Entity(position_, yaw_, pitch_, speed_), camera(camera_), lastMouseX(windows[0].getWidth() / 2),
+                   Camera &camera_,  const std::initializer_list<std::reference_wrapper<const Renderable>> &collidables_):
+        Entity(position_, yaw_, pitch_, speed_, collidables_), camera(camera_), lastMouseX(windows[0].getWidth() / 2),
         lastMouseY(windows[0].getHeight() / 2), firstMouse(true) {
         processInput(windows[0]);
         static auto mouseCallbackStatic = [this](GLFWwindow *window, const double xpos, const double ypos) {
@@ -30,7 +30,7 @@ namespace Engine {
     }
 
     void Player::processInput(GLFWwindow *window) {
-        setSpeed(500.0f * deltaTime);
+        setSpeed(6.0f * deltaTime);
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
