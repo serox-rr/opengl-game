@@ -9,8 +9,10 @@ in vec2 TextureCoord[];
 out float Height;
 out vec3 FragPos;
 out vec3 Normal;
+out vec2 TexCoord;
 void main()
 {
+    TexCoord = TextureCoord[0] + gl_TessCoord.xy * (TextureCoord[3] - TextureCoord[0]);
     float u = gl_TessCoord.x;
     float v = gl_TessCoord.y;
 

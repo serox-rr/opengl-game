@@ -23,7 +23,7 @@ int main() {
         camera.setSpeed(10.0f);
         int frameAmount = 0;
         double startTime = glfwGetTime();
-        Engine::Font inter("../../../game/ressources/fonts/Inter-VariableFont_slnt,wght.ttf");
+        Engine::Font inter("../../../game/resources/fonts/Inter-VariableFont_slnt,wght.ttf");
 
         const Engine::Shader textShader({"color", "projection"}, "../../../engine/shaders/text/text.vert",
                                         "../../../engine/shaders/text/text.frag", std::nullopt, std::nullopt,
@@ -39,7 +39,8 @@ int main() {
                 "../../../engine/shaders/vectors/vectors.frag", std::nullopt, std::nullopt, std::nullopt);
 
         const Engine::Shader terrainShader(
-                {"transpose", "model", "heightMap", "objectColor", "lightColor", "lightPos", "modelNormal", "viewPos"},
+                {"transpose", "model", "heightMap","viewPos", "material.ambient", "material.diffuse", "material.specular",
+                 "material.shininess", "light.direction", "light.ambient", "light.diffuse", "light.specular"},
                 "../../../engine/shaders/terrain/terrain.vert", "../../../engine/shaders/terrain/terrain.frag",
                 std::nullopt, "../../../engine/shaders/terrain/terrain.tesc",
                 "../../../engine/shaders/terrain/terrain.tese");

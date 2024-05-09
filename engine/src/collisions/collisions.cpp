@@ -9,7 +9,7 @@ namespace Engine::Collisions {
     glm::vec3 check(const Entity *entity, const std::vector<std::reference_wrapper<const Renderable>> &renderables,
                     const glm::vec3 &position) {
         if (const auto terrain = dynamic_cast<const Terrain *>(&renderables[0].get())) {
-            const auto heightMap = terrain->getHeightMap();
+            const auto &heightMap = terrain->getHeightMap();
             const auto width = terrain->getWidth();
             const auto height = terrain->getHeight();
             const auto x = static_cast<int>(position.x) + width / 2;
