@@ -15,7 +15,7 @@ export import :renderable.terrain;
 export import :renderable.text;
 export import :renderable.light;
 export import :renderable.vectors;
-export import :collisions;
+export import :physics.collisions;
 export import :entity;
 export import :entity.player;
 

@@ -5,19 +5,16 @@ module;
 module engine;
 
 namespace Engine {
-    Entity::Entity(const glm::vec3 position_, const double yaw_, const double pitch_, const double speed_, const std::initializer_list<std::reference_wrapper<const Renderable>> &collidables_) :
-        position(position_), front(glm::vec3(0.0, 0.0, -1.0)), up(glm::vec3(0.0, 1.0, 0.0)), yaw(yaw_), pitch(pitch_),
-        speed(speed_), collidables(collidables_) {}
+    Entity::Entity(const glm::vec3 position_, const double yaw_, const double pitch_, const double speed_,
+                   const std::initializer_list<std::reference_wrapper<const Renderable>> &collidables_,
+                   const float mass_) :
+        position(position_), front(0.0, 0.0, -1.0), up(0.0, 1.0, 0.0), force(0, 0, 0), velocity(0, 0, 0),
+        travelVelocity(0, 0, 0), yaw(yaw_), pitch(pitch_), speed(speed_), collidables(collidables_), mass(mass_) {}
 
 
-    void Entity::setPosition(const glm::vec3 position_) {
-        position = Collisions::check(this, collidables, position_);
-        update();
-    }
+    void Entity::setForce(const glm::vec3 force_) { force = force_; }
 
-    void Entity::addPosition(const glm::vec3 position_) {
-        setPosition(position + position_);
-    }
+    void Entity::addForce(const glm::vec3 force_) { setForce(force + force_); }
 
     void Entity::setLookingDirection(const float yaw_, const float pitch_) {
         yaw = yaw_;
@@ -31,21 +28,7 @@ namespace Engine {
         direction.y = sin(glm::radians(pitch));
         direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
         front = glm::normalize(direction);
-        update();
     }
-
-
-    void Entity::moveRight() { addPosition(glm::normalize(glm::cross(front, up)) * speed); }
-
-    void Entity::moveLeft() { addPosition(-glm::normalize(glm::cross(front, up)) * speed); }
-
-    void Entity::moveForward() { addPosition(speed * front); }
-
-    void Entity::moveBackward() { addPosition(-speed * front); }
-
-    void Entity::moveUp() { addPosition(speed * up); }
-
-    void Entity::moveDown() { addPosition(-speed * up); }
 
     void Entity::setSpeed(const float _speed) { speed = _speed; }
 
