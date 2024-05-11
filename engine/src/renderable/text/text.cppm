@@ -7,7 +7,7 @@ import :renderable;
 import :font;
 
 export namespace Engine {
-    class Text final : public Renderable {
+    class Text final : public Renderable<float> {
     public:
         Text(std::string_view content_, const glm::vec3 &position_, const glm::vec3 &color_, float scale_, Font &font_,
              const Shader &shader_);

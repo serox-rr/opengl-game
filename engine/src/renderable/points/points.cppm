@@ -6,7 +6,7 @@ import :shader;
 import :renderable;
 
 export namespace Engine {
-    class Points final: public Renderable {
+    class Points final: public Renderable<float> {
     public:
         explicit Points(const glm::vec3 &color, const Shader &shader_, const std::vector<float> &vertices_);
         void render() override;

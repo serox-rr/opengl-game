@@ -6,8 +6,8 @@ module;
 module engine;
 
 namespace Engine {
-    Vectors::Vectors(const glm::vec3 &color, const Shader &shader_, const std::vector<float> &vertex_) :
-        Renderable(0, 0, color, glm::vec3(0, 0, 0), vertex_, shader_) {
+    Vectors::Vectors(const glm::vec3 &color, const Shader &shader_, const std::vector<float> &vertices_) :
+        Renderable(0, 0, color, glm::vec3(0, 0, 0), vertices_, shader_) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
         glGenBuffers(1, &vbo);

@@ -3,12 +3,18 @@ module;
 #include <vector>
 export module engine:renderable;
 import :shader;
-
 export namespace Engine {
+    struct Vertex {
+        glm::vec3 Position;
+        glm::vec3 Normal;
+        glm::vec2 TexCoords;
+    };
+
+    template <typename T>
     class Renderable {
     public:
-        Renderable(const unsigned vao, const unsigned vbo, const glm::vec3 &color_, const glm::vec3 position_, const std::vector<float> &vertex_,
-                   const Shader &shader_) : vao(vao), vbo(vbo), color(color_), position(position_), shader(shader_), vertices(vertex_){};
+        Renderable(const unsigned vao, const unsigned vbo, const glm::vec3 &color_, const glm::vec3 position_, const std::vector<T> &vertices_,
+                   const Shader &shader_) : vao(vao), vbo(vbo), color(color_), position(position_), shader(shader_), vertices(vertices_){};
         virtual void render() = 0;
         virtual ~Renderable() = default;
         [[nodiscard]] glm::vec3 getColor() const { return color; }
@@ -23,12 +29,13 @@ export namespace Engine {
 
         [[nodiscard]] const Shader &getShader() const { return shader; }
 
-         [[nodiscard]] std::vector<float> getVertices() const { return vertices; }
+         [[nodiscard]] std::vector<T> getVertices() const { return vertices; }
 
     protected:
         unsigned vao, vbo;
         glm::vec3 color, position;
         const Shader &shader;
-        std::vector<float> vertices;
+        std::vector<T> vertices;
     };
+
 } // namespace Engine

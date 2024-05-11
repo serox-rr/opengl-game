@@ -7,7 +7,7 @@ import :shader;
 import :renderable;
 
 export namespace Engine {
-    class Terrain final: public Renderable {
+    class Terrain final: public Renderable<float> {
     public:
         explicit Terrain(const glm::vec3 &color, const Shader &shader_);
         void render() override;

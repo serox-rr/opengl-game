@@ -35,7 +35,7 @@ namespace Engine::Physics {
                      floor(position.z + 1)});
             const auto y = (y1 + (y2 - y1) * (position.x - floorX1) +
                            (y3 - y1) * (position.z - floorZ1) +
-                           (y1 + y4 - y2 - y3) * (position.x - floorX1) * (position.z - floorZ1))*64.0+1.0;
+                           (y1 + y4 - y2 - y3) * (position.x - floorX1) * (position.z - floorZ1))*64.0+1.7;
             if (y > position.y)
                 return glm::vec3(position.x, y, position.z);
         }
