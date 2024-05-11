@@ -32,9 +32,9 @@ int main() {
                 "../../../engine/shaders/perspective/perspective.vert",
                 "../../../engine/shaders/perspective/perspective.frag", std::nullopt, std::nullopt, std::nullopt);
 
-        const Engine::Shader vectorsShader(
-                {"model", "transpose", "objectColor"}, "../../../engine/shaders/vectors/vectors.vert",
-                "../../../engine/shaders/vectors/vectors.frag", std::nullopt, std::nullopt, std::nullopt);
+        const Engine::Shader simpleShader(
+                {"model", "transpose", "objectColor"}, "../../../engine/shaders/simple/simple.vert",
+                "../../../engine/shaders/simple/simple.frag", std::nullopt, std::nullopt, std::nullopt);
 
         const Engine::Shader terrainShader(
                 {"transpose", "model", "heightMap","viewPos", "material.ambient", "material.diffuse", "material.specular",
@@ -44,16 +44,17 @@ int main() {
                 "../../../engine/shaders/terrain/terrain.tese");
 
         Engine::Terrain terrain{glm::vec3(61.0 / 255.0, 33.0 / 255.0, 23.0 / 255.0), terrainShader};
-        Engine::Light light{glm::vec3(1.0, 1.0, 1.0), glm::vec3(50, 10, sin(glfwGetTime()) * 20 + 50), vectorsShader};
+        Engine::Light light{glm::vec3(1.0, 1.0, 1.0), glm::vec3(50, 10, sin(glfwGetTime()) * 20 + 50), simpleShader};
         Engine::Text coordsText("142", glm::vec3(100, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
         Engine::Text fpsText("fps: 0", glm::vec3(0, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
+        Engine::points = std::make_unique<Engine::Points>(Engine::Points(glm::vec3(1.0, 0.0, 0.0), simpleShader, {0,60,0}));
         std::initializer_list<std::reference_wrapper<const Engine::Renderable>> collidables = {std::reference_wrapper(terrain)};
-        Engine::Camera camera(glm::vec3(0.0f, 70.0f, 0.0f));
-        Engine::Player player(glm::vec3(0.0, 70.0f, 0.0), -90.0, 0.0, 1.9, camera, collidables, 70);
+        Engine::Camera camera(glm::vec3(0.0f, 60.0f, 0.0f));
+        Engine::Player player(glm::vec3(0.0, 60.0f, 0.0), -90.0, 0.0, 1.9, camera, collidables, 70);
         std::reference_wrapper<const Engine::Shader> perspectiveShaders[] = {std::reference_wrapper(perspectiveShader),
-                                                                             std::reference_wrapper(vectorsShader),
+                                                                             std::reference_wrapper(simpleShader),
                                                                              std::reference_wrapper(terrainShader)};
-        Engine::PerspectiveRenderer perspectiveRenderer(camera, {terrain, light}, perspectiveShaders);
+        Engine::PerspectiveRenderer perspectiveRenderer(camera, {terrain, light, *Engine::points.get()}, perspectiveShaders);
         while (!glfwWindowShouldClose(Engine::windows[0])) {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -66,9 +67,9 @@ int main() {
             light.setPosition(glm::vec3(0, yLight, zLight));
             coordsText.render();
             fpsText.render();
-            perspectiveRenderer.render();
             player.processInput(Engine::windows[0]);
             player.update();
+            perspectiveRenderer.render();
             auto pos = player.getPosition();
             coordsText.setContent("X: " + std::to_string(pos.x) + " Y: " + std::to_string(pos.y) +
                                   " Z: " + std::to_string(pos.z));

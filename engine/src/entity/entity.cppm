@@ -20,7 +20,7 @@ export namespace Engine {
         [[nodiscard]] glm::vec3 getPosition() const;
         virtual ~Entity() = default;
     protected:
-        glm::vec3 position, front, up, velocity, force, travelVelocity;
+        glm::vec3 position, front, up, uncontrolledVelocity, force, travelVelocity;
         float yaw, pitch, mass, speed;
         std::vector<std::reference_wrapper<const Renderable>> collidables;
     };

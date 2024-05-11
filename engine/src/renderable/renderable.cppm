@@ -23,7 +23,7 @@ export namespace Engine {
 
         [[nodiscard]] const Shader &getShader() const { return shader; }
 
-         [[nodiscard]] std::vector<float> getVertex() const { return vertices; }
+         [[nodiscard]] std::vector<float> getVertices() const { return vertices; }
 
     protected:
         unsigned vao, vbo;

@@ -35,23 +35,15 @@ namespace Engine {
     }
 
     void Player::update() {
-        velocity += force * deltaTime;
-        position += (velocity + travelVelocity) * deltaTime;
-        if (const auto colY = Physics::checkCollision(this, collidables, position); colY.has_value()) {
-            position.y = colY.value().y;
-            velocity.y = 0;
+        uncontrolledVelocity += force * deltaTime;
+        auto tposition = (uncontrolledVelocity + travelVelocity) * deltaTime + position;
+        if (const auto colY = Physics::checkCollision(this, collidables, tposition); colY.has_value()) {
+            tposition = colY.value();
+            uncontrolledVelocity.y = 0;
         }
+        position = tposition;
         camera.setPosition(position);
         camera.setLookingDirection(yaw, pitch);
-    }
-
-    std::optional<bool> Player::toggleInput(GLFWwindow *window, const unsigned input) {
-        if (glfwGetKey(window, input) == GLFW_PRESS && !keyStates[input])
-            return keyStates[input] = true;
-        if (glfwGetKey(window, input) == GLFW_RELEASE && keyStates[input])
-            return keyStates[input] = false;
-        return std::nullopt;
-        // return keyStates[input] = glfwGetKey(window, input) == GLFW_PRESS && !keyStates[input];
     }
 
     void Player::processInput(GLFWwindow *window) {
@@ -66,13 +58,18 @@ namespace Engine {
             travelVelocity -= glm::vec3(1, 0, 1) * speed * glm::normalize(glm::cross(front, up));
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             travelVelocity += glm::vec3(1, 0, 1) * speed * glm::normalize(glm::cross(front, up));
-        if (const auto key = glfwGetKey(window, GLFW_KEY_SPACE); velocity.y == 0 && key == GLFW_PRESS && !keyStates[GLFW_KEY_SPACE]) {
+        if (const auto key = glfwGetKey(window, GLFW_KEY_SPACE);
+            uncontrolledVelocity.y == 0 && key == GLFW_PRESS && !keyStates[GLFW_KEY_SPACE]) {
             keyStates[GLFW_KEY_SPACE] = true;
-            velocity.y += 10;
+            uncontrolledVelocity.y += 10;
         }
         else if (key == GLFW_RELEASE && keyStates[GLFW_KEY_SPACE]) {
             keyStates[GLFW_KEY_SPACE] = false;
         }
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+            setSpeed(50);
+        else
+            setSpeed(3.5);
     }
 
 

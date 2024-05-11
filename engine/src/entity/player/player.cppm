@@ -13,7 +13,6 @@ export namespace Engine {
         void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
         void mouse_callback(GLFWwindow *window, double xpos, double ypos);
         void processInput(GLFWwindow *window);
-        std::optional<bool> toggleInput(GLFWwindow *window, unsigned input);
         ~Player() override = default;
 
     private:

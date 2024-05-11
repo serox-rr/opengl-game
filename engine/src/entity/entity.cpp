@@ -8,7 +8,7 @@ namespace Engine {
     Entity::Entity(const glm::vec3 position_, const double yaw_, const double pitch_, const double speed_,
                    const std::initializer_list<std::reference_wrapper<const Renderable>> &collidables_,
                    const float mass_) :
-        position(position_), front(0.0, 0.0, -1.0), up(0.0, 1.0, 0.0), force(0, 0, 0), velocity(0, 0, 0),
+        position(position_), front(0.0, 0.0, -1.0), up(0.0, 1.0, 0.0), force(0, 0, 0), uncontrolledVelocity(0, 0, 0),
         travelVelocity(0, 0, 0), yaw(yaw_), pitch(pitch_), speed(speed_), collidables(collidables_), mass(mass_) {}
 
 
