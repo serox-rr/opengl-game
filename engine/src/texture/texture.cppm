@@ -1,5 +1,5 @@
 module;
-
+#include <string>
 export module engine:texture;
 export namespace Engine {
     class Texture {
@@ -10,4 +10,6 @@ export namespace Engine {
     private:
         unsigned ID;
     };
+
+    unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma);
 } // namespace Engine
