@@ -6,7 +6,6 @@ module;
 #include <functional>
 #include <glm/glm.hpp>
 #include <iostream>
-#include <numbers>
 #include <span>
 module game;
 
@@ -44,7 +43,6 @@ int main() {
                 "../../../engine/shaders/terrain/terrain.tese");
 
         Engine::Terrain terrain{glm::vec3(61.0 / 255.0, 33.0 / 255.0, 23.0 / 255.0), terrainShader};
-        Engine::Light light{glm::vec3(1.0, 1.0, 1.0), glm::vec3(50, 10, sin(glfwGetTime()) * 20 + 50), simpleShader};
         Engine::Text coordsText("142", glm::vec3(100, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
         Engine::Text fpsText("fps: 0", glm::vec3(0, 0, 0), glm::vec3(0.5, 0.8f, 0.2f), 0.5f, inter, textShader);
         Engine::points = std::make_unique<Engine::Points>(Engine::Points(glm::vec3(1.0, 0.0, 0.0), simpleShader, {0,60,0}));
@@ -59,12 +57,6 @@ int main() {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             Engine::updateTime();
-            double teta = std::fmod(glfwGetTime(), 100) / 50 * std::numbers::pi * 10;
-            double r = 500;
-            double zLight = r * cos(teta);
-            double yLight = r * abs(sin(teta));
-            light.setColor(glm::vec3(1, 1, 1));
-            light.setPosition(glm::vec3(0, yLight, zLight));
             coordsText.render();
             fpsText.render();
             player.processInput(Engine::windows[0]);

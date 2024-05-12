@@ -13,7 +13,6 @@ export import :renderer.perspective;
 export import :renderable;
 export import :renderable.terrain;
 export import :renderable.text;
-export import :renderable.light;
 export import :renderable.vectors;
 export import :renderable.points;
 export import :physics.collisions;
