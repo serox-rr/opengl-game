@@ -35,5 +35,8 @@
   }, {
     "name" : "glad",
     "version>=" : "0.1.36"
+  }, {
+    "name" : "assimp",
+    "version>=" : "5.4.0"
   } ]
 }

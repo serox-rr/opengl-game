@@ -11,5 +11,5 @@ export namespace Engine {
         unsigned ID;
     };
 
-    unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma);
+    unsigned TextureFromFile(const std::string &filename, const std::string &directory, bool gamma = false);
 } // namespace Engine

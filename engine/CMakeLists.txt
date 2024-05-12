@@ -40,6 +40,6 @@ find_package(glm CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(Stb REQUIRED)
-
-target_link_libraries(engine PUBLIC glfw glad::glad glm::glm FastNoise Freetype::Freetype)
+find_package(assimp CONFIG REQUIRED)
+target_link_libraries(engine PUBLIC glfw glad::glad glm::glm FastNoise Freetype::Freetype assimp::assimp)
 target_include_directories(engine PUBLIC ${Stb_INCLUDE_DIR})
