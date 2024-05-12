@@ -11,7 +11,7 @@ import :shader;
 
 namespace Engine {
     Text::Text(std::string_view content_, const glm::vec3 &position_, const glm::vec3 &color_, const float scale_,
-               Font &font_, const Shader &shader_) :
+               Font &font_, Shader &shader_) :
         Renderable(0, 0, color_, position_, {}, shader_), content(content_), scale(scale_), font(font_) {
         glGenVertexArrays(1, &vao);
         glGenBuffers(1, &vbo);
@@ -29,7 +29,7 @@ namespace Engine {
     }
 
 
-    void Text::render() {
+    void Text::render() const {
         shader.use();
         shader.setVec3("color", color);
         glActiveTexture(GL_TEXTURE0);

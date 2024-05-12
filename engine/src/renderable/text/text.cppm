@@ -7,12 +7,12 @@ import :renderable;
 import :font;
 
 export namespace Engine {
-    class Text final : public Renderable<float> {
+    class Text final : public Renderable {
     public:
         Text(std::string_view content_, const glm::vec3 &position_, const glm::vec3 &color_, float scale_, Font &font_,
-             const Shader &shader_);
+             Shader &shader_);
 
-        void render() override;
+        void render() const override;
 
         ~Text() override;
 

@@ -6,7 +6,7 @@ module;
 module engine;
 
 namespace Engine {
-    Vectors::Vectors(const glm::vec3 &color, const Shader &shader_, const std::vector<float> &vertices_) :
+    Vectors::Vectors(const glm::vec3 &color, Shader &shader_, const std::vector<float> &vertices_) :
         Renderable(0, 0, color, glm::vec3(0, 0, 0), vertices_, shader_) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -21,7 +21,7 @@ namespace Engine {
         glEnableVertexAttribArray(0);
     }
 
-    void Vectors::render() {
+    void Vectors::render() const {
         shader.use();
         shader.setVec3("objectColor", color);
         glBindVertexArray(vao);

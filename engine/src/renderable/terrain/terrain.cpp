@@ -6,11 +6,11 @@ module;
 module engine;
 
 namespace Engine {
-    Terrain::Terrain(const glm::vec3 &color, const Shader &shader_) :
+    Terrain::Terrain(const glm::vec3 &color, Shader &shader_) :
         Renderable(0, 0, color, glm::vec3(0, 0, 0), {}, shader_), width(1000), height(1000), rez(20), position(0, 0, 0),
         heightMap(width * height) {
 
-        const FastNoise::SmartNode<> fnGenerator = FastNoise::NewFromEncodedNodeTree("HAABGQAHAAAAAIA/AAAAAEA=");
+        const FastNoise::SmartNode<> fnGenerator = FastNoise::NewFromEncodedNodeTree("HAABGQAOAAMAAAAAAABABwAAAAAAPwAAAAAAAAAAAEAAAACAPwAAAABA");
         fnGenerator->GenUniformGrid2D(heightMap.data(), 0, 0, width, height, 0.009f, 300);
         unsigned int texture;
         glGenTextures(1, &texture);
@@ -77,7 +77,7 @@ namespace Engine {
         glPatchParameteri(GL_PATCH_VERTICES, 4);
     }
 
-    void Terrain::render() {
+    void Terrain::render() const {
         // draw mesh
         glBindVertexArray(vao);
         glDrawArrays(GL_PATCHES, 0, 4 * rez * rez);

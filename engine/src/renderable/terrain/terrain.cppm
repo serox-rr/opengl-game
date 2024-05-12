@@ -7,10 +7,10 @@ import :shader;
 import :renderable;
 
 export namespace Engine {
-    class Terrain final: public Renderable<float> {
+    class Terrain final: public Renderable {
     public:
-        explicit Terrain(const glm::vec3 &color, const Shader &shader_);
-        void render() override;
+        explicit Terrain(const glm::vec3 &color, Shader &shader_);
+        void render() const override;
         ~Terrain() override;
         [[nodiscard]] const std::vector<float> &getHeightMap() const;
         [[nodiscard]] const int &getWidth() const;
