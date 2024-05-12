@@ -63,6 +63,17 @@ namespace Engine {
             glUniformMatrix3fv(it->second, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
+    void Shader::addUniform(const std::string &name) {
+        if (!uniforms.contains(name))
+            uniforms.insert({name, glGetUniformLocation(id, name.c_str())});
+    }
+
+    void Shader::addUniforms(const std::initializer_list<std::string> &names) {
+        for (const auto &name: names) {
+            addUniform(name);
+        }
+    }
+
     void Shader::addShaderFile(const std::string_view path, const unsigned type) const {
         std::string a = getFile(path);
         const char *s = a.c_str();
@@ -95,6 +106,5 @@ namespace Engine {
     }
 
     unsigned Shader::getId() const { return id; }
-
 
 } // namespace Engine

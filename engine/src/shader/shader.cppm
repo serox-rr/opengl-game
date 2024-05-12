@@ -6,7 +6,7 @@ module;
 #include <optional>
 #include <string>
 #include "glm/fwd.hpp"
-
+#include <span>
 export module engine:shader;
 
 export namespace Engine {
@@ -35,6 +35,10 @@ export namespace Engine {
         void setMat3(std::string_view name, const glm::mat3 &matrix) const;
 
         void setVec3(std::string_view name, const glm::vec3 &vec3) const;
+
+        void addUniform(const std::string &name);
+
+        void addUniforms(const std::initializer_list<std::string> &names);
 
         [[nodiscard]] unsigned getId() const;
 
