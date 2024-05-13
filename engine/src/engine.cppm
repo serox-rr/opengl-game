@@ -3,6 +3,7 @@ module;
 export module engine;
 export import :utils;
 export import :camera;
+export import :camera.first_person;
 export import :shader;
 export import :texture;
 export import :window;

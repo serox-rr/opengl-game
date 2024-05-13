@@ -25,52 +25,6 @@ namespace Engine {
         updateView();
     }
 
-    void Camera::moveRight() {
-        addPosition(glm::normalize(glm::cross(front, up)) * speed);
-    }
-
-    void Camera::moveLeft() {
-        addPosition(-glm::normalize(glm::cross(front, up)) * speed);
-    }
-
-    void Camera::moveForward() {
-        addPosition(speed * front);
-
-    }
-
-    void Camera::moveBackward() {
-        addPosition(-speed * front);
-
-    }
-
-    void Camera::moveUp() {
-        addPosition(speed*up);
-
-    }
-
-    void Camera::moveDown() {
-        addPosition(-speed*up);
-    }
-
-    void Camera::setLookingDirection(float _yaw, float _pitch) {
-        yaw   = _yaw;
-        pitch = _pitch;
-        if(pitch > 89.0f)
-            pitch =  89.0f;
-        if(pitch < -89.0f)
-            pitch = -89.0f;
-        glm::vec3 direction;
-        direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        direction.y = sin(glm::radians(pitch));
-        direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front = glm::normalize(direction);
-        updateView();
-    }
-
-    void Camera::setSpeed(float _speed) {
-        speed = _speed;
-    }
-
     float Camera::getPitch() const {
         return pitch;
     }

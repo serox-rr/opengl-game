@@ -17,23 +17,17 @@ export namespace Engine {
         [[nodiscard]] float getFov() const;
         [[nodiscard]] glm::vec3 getPosition() const;
 
-        void moveRight();
-        void moveLeft();
-        void moveForward();
-        void moveBackward();
-        void moveUp();
-        void moveDown();
-        void setLookingDirection(float yaw, float pitch);
-        void setSpeed(float _speed);
+        virtual void setLookingDirection(float yaw, float pitch) = 0;
         void setPosition(glm::vec3 position);
         void addPosition(glm::vec3 position);
         void setFov(float _fov);
         void updateView();
+        virtual ~Camera() = default;
 
 
-    private:
+    protected:
         glm::vec<3, double> position, front, up;
         glm::mat4 view;
-        double yaw = -90.0, pitch = 0.0, speed = 10.0, sensitivity = 0.1, fov = 45.0;
+        double yaw = -90.0, pitch = 0.0, sensitivity = 0.1, fov = 45.0;
     };
-}
+} // namespace Engine
