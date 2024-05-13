@@ -7,17 +7,18 @@ module;
 module engine;
 
 namespace Engine {
-    Player::Player(const glm::vec3 &position_, const double yaw_, const double pitch_, const double speed_,
-                   Camera &camera_, const std::initializer_list<std::reference_wrapper<const Renderable>> &collidables_,
-                   const float mass_) :
-        Entity(position_, yaw_, pitch_, speed_, collidables_, mass_), camera(camera_),
-        lastMouseX(windows[0].getWidth() / 2), lastMouseY(windows[0].getHeight() / 2), firstMouse(true),
-        keyStates({{GLFW_KEY_W, false},
-                   {GLFW_KEY_Q, false},
-                   {GLFW_KEY_S, false},
-                   {GLFW_KEY_A, false},
-                   {GLFW_KEY_SPACE, false},
-                   {GLFW_KEY_LEFT_CONTROL, false}}) {
+    Player::Player(const glm::vec3 &position_, double yaw_, double pitch_, double speed_,
+                   const std::initializer_list<std::reference_wrapper<const Renderable>> &collidables_, const float mass_) :
+        Entity(position_, yaw_, pitch_, speed_, collidables_, mass_), lastMouseX(windows[0].getWidth() / 2),
+        lastMouseY(windows[0].getHeight() / 2), firstMouse(true), keyStates({{GLFW_KEY_W, false},
+                                                                             {GLFW_KEY_Q, false},
+                                                                             {GLFW_KEY_S, false},
+                                                                             {GLFW_KEY_A, false},
+                                                                             {GLFW_KEY_SPACE, false},
+                                                                             {GLFW_KEY_LEFT_CONTROL, false}}) {
+        FirstPersonCamera firstPersonCamera(position_);
+        activeCamera = std::make_unique<FirstPersonCamera>(firstPersonCamera);
+        cameras = {std::reference_wrapper<Camera>(firstPersonCamera)};
         processInput(windows[0]);
         static auto mouseCallbackStatic = [this](GLFWwindow *window, const double xpos, const double ypos) {
             mouse_callback(window, xpos, ypos);
@@ -42,8 +43,8 @@ namespace Engine {
             uncontrolledVelocity.y = 0;
         }
         position = tposition;
-        camera.setPosition(position);
-        camera.setLookingDirection(yaw, pitch);
+        activeCamera->setPosition(position);
+        activeCamera->setLookingDirection(yaw, pitch);
     }
 
     void Player::processInput(GLFWwindow *window) {
@@ -84,13 +85,16 @@ namespace Engine {
             lastMouseY = ypos;
             firstMouse = false;
         }
-        xoffset *= camera.getSensitivity();
-        yoffset *= camera.getSensitivity();
+        xoffset *= activeCamera->getSensitivity();
+        yoffset *= activeCamera->getSensitivity();
         setLookingDirection(yaw + xoffset, pitch + yoffset);
     }
 
-    void Player::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-        camera.setFov(camera.getFov() - static_cast<float>(yoffset));
+    void Player::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) const {
+        activeCamera->setFov(activeCamera->getFov() - static_cast<float>(yoffset));
     }
 
+    Camera &Player::getActiveCamera() const {
+        return *activeCamera.get();
+    }
 } // namespace Engine

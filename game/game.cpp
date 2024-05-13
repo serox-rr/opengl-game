@@ -54,17 +54,16 @@ int main() {
                 std::make_unique<Engine::Points>(Engine::Points(glm::vec3(1.0, 0.0, 0.0), simpleShader, {0, 60, 0}));
         std::initializer_list<std::reference_wrapper<const Engine::Renderable>> collidables = {
                 std::reference_wrapper(terrain)};
-        Engine::Camera camera(glm::vec3(0.0f, 60.0f, 0.0f));
-        Engine::Player player(glm::vec3(0.0, 60.0f, 0.0), -90.0, 0.0, 1.9, camera, collidables, 70);
+        Engine::Player player(glm::vec3(0.0, 60.0f, 0.0), -90.0, 0.0, 1.9, collidables, 70);
         std::reference_wrapper<Engine::Shader> perspectiveShaders[] = {std::reference_wrapper(perspectiveShader),
                                                                              std::reference_wrapper(simpleShader),
                                                                              std::reference_wrapper(terrainShader)};
-        Engine::PerspectiveRenderer perspectiveRenderer(camera, {terrain, *Engine::points.get()}, perspectiveShaders);
+        Engine::PerspectiveRenderer perspectiveRenderer(dynamic_cast<Engine::Camera &>(player.getActiveCamera()), {terrain, *Engine::points.get()}, perspectiveShaders);
 
 
         Engine::Model model("../../../game/resources/models/backpack/backpack.obj", glm::vec3(0, 60, 0), modelShader);
         std::reference_wrapper<Engine::Shader> modelShaders[] = {std::reference_wrapper(modelShader)};
-        Engine::ModelRenderer modelRenderer(camera, {model}, modelShaders);
+        Engine::ModelRenderer modelRenderer(player.getActiveCamera(), {model}, modelShaders);
         while (!glfwWindowShouldClose(Engine::windows[0])) {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
