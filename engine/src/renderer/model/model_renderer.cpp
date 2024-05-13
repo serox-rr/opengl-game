@@ -19,7 +19,7 @@ namespace Engine {
         const Window window = windows[0];
         const glm::mat4 projection =
                 glm::perspective(glm::radians(camera.getFov()),
-                                 static_cast<float>(window.getWidth() / window.getHeight()), 0.1f, 100000000.0f);
+                                 static_cast<float>(window.getWidth()) / static_cast<float>(window.getHeight()), 0.1f, 100000000.0f);
         const glm::mat4 transpose = projection * camera.getView();
         std::ranges::for_each(shaders.begin(), shaders.end(), [&transpose]( Shader &shader) {
             shader.use();
