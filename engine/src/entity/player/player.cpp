@@ -13,7 +13,7 @@ namespace Engine {
         Entity(position_, yaw_, pitch_, speed_, collidables_, mass_), lastMouseX(windows[0].getWidth() / 2),
         lastMouseY(windows[0].getHeight() / 2), firstMouse(true), keyStates({{GLFW_KEY_V, false}, {GLFW_KEY_SPACE, false}}) {
         cameras.emplace_back(std::make_shared<FirstPersonCamera>(position_));
-        cameras.emplace_back(std::make_shared<FirstPersonCamera>(position_));
+        cameras.emplace_back(std::make_shared<TopDownCamera>(position_));
         activeCamera = cameras[0];
         processInput(windows[0]);
         static auto mouseCallbackStatic = [this](GLFWwindow *window, const double xpos, const double ypos) {
