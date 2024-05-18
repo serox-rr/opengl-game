@@ -11,13 +11,14 @@ module engine;
 
 namespace Engine {
 
-    PerspectiveRenderer::PerspectiveRenderer(Camera &camera_,
+    PerspectiveRenderer::PerspectiveRenderer(Player &player_,
                                              const std::vector<std::reference_wrapper<Renderable>> &renderables_,
                                              const std::span<std::reference_wrapper<Shader>> &shaders_) :
-        Renderer(shaders_, renderables_), camera(camera_) {}
+        Renderer(shaders_, renderables_), player(player_) {}
 
     void PerspectiveRenderer::render() const {
         const Window window = windows[0];
+        Camera &camera = player.getActiveCamera();
         const glm::mat4 projection =
                 glm::perspective(glm::radians(camera.getFov()),
                                  static_cast<float>(window.getWidth()) / static_cast<float>(window.getHeight()), 0.1f, 100000000.0f);

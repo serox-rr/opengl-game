@@ -58,12 +58,12 @@ int main() {
         std::reference_wrapper<Engine::Shader> perspectiveShaders[] = {std::reference_wrapper(perspectiveShader),
                                                                              std::reference_wrapper(simpleShader),
                                                                              std::reference_wrapper(terrainShader)};
-        Engine::PerspectiveRenderer perspectiveRenderer(dynamic_cast<Engine::Camera &>(player.getActiveCamera()), {terrain, *Engine::points.get()}, perspectiveShaders);
+        Engine::PerspectiveRenderer perspectiveRenderer(player, {terrain, *Engine::points.get()}, perspectiveShaders);
 
 
         Engine::Model model("../../../game/resources/models/backpack/backpack.obj", glm::vec3(0, 60, 0), modelShader);
         std::reference_wrapper<Engine::Shader> modelShaders[] = {std::reference_wrapper(modelShader)};
-        Engine::ModelRenderer modelRenderer(player.getActiveCamera(), {model}, modelShaders);
+        Engine::ModelRenderer modelRenderer(player, {model}, modelShaders);
         while (!glfwWindowShouldClose(Engine::windows[0])) {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -8,17 +8,13 @@ module engine;
 
 namespace Engine {
     Player::Player(const glm::vec3 &position_, double yaw_, double pitch_, double speed_,
-                   const std::initializer_list<std::reference_wrapper<const Renderable>> &collidables_, const float mass_) :
+                   const std::initializer_list<std::reference_wrapper<const Renderable>> &collidables_,
+                   const float mass_) :
         Entity(position_, yaw_, pitch_, speed_, collidables_, mass_), lastMouseX(windows[0].getWidth() / 2),
-        lastMouseY(windows[0].getHeight() / 2), firstMouse(true), keyStates({{GLFW_KEY_W, false},
-                                                                             {GLFW_KEY_Q, false},
-                                                                             {GLFW_KEY_S, false},
-                                                                             {GLFW_KEY_A, false},
-                                                                             {GLFW_KEY_SPACE, false},
-                                                                             {GLFW_KEY_LEFT_CONTROL, false}}) {
-        FirstPersonCamera firstPersonCamera(position_);
-        activeCamera = std::make_unique<FirstPersonCamera>(firstPersonCamera);
-        cameras = {std::reference_wrapper<Camera>(firstPersonCamera)};
+        lastMouseY(windows[0].getHeight() / 2), firstMouse(true), keyStates({{GLFW_KEY_V, false}, {GLFW_KEY_SPACE, false}}) {
+        cameras.emplace_back(std::make_shared<FirstPersonCamera>(position_));
+        cameras.emplace_back(std::make_shared<FirstPersonCamera>(position_));
+        activeCamera = cameras[0];
         processInput(windows[0]);
         static auto mouseCallbackStatic = [this](GLFWwindow *window, const double xpos, const double ypos) {
             mouse_callback(window, xpos, ypos);
@@ -47,6 +43,14 @@ namespace Engine {
         activeCamera->setLookingDirection(yaw, pitch);
     }
 
+    std::optional<bool> Player::toggleInput(GLFWwindow *window, const unsigned input) {
+        if (glfwGetKey(window, input) == GLFW_PRESS && !keyStates[input])
+            return keyStates[input] = true;
+        if (glfwGetKey(window, input) == GLFW_RELEASE && keyStates[input])
+            return keyStates[input] = false;
+        return std::nullopt;
+    }
+
     void Player::processInput(GLFWwindow *window) {
         travelVelocity = glm::vec3(0, 0, 0);
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -59,18 +63,13 @@ namespace Engine {
             travelVelocity -= glm::vec3(1, 0, 1) * speed * glm::normalize(glm::cross(front, up));
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             travelVelocity += glm::vec3(1, 0, 1) * speed * glm::normalize(glm::cross(front, up));
-        if (const auto key = glfwGetKey(window, GLFW_KEY_SPACE);
-            uncontrolledVelocity.y == 0 && key == GLFW_PRESS && !keyStates[GLFW_KEY_SPACE]) {
-            keyStates[GLFW_KEY_SPACE] = true;
+        if (const auto key = toggleInput(window, GLFW_KEY_SPACE);
+            key.has_value() && key.value() && uncontrolledVelocity.y == 0)
             uncontrolledVelocity.y += 10;
+        if (const auto key = toggleInput(window, GLFW_KEY_V); key.has_value() && key.value()) {
+            activeCamera = cameras[cameras[0] == activeCamera];
         }
-        else if (key == GLFW_RELEASE && keyStates[GLFW_KEY_SPACE]) {
-            keyStates[GLFW_KEY_SPACE] = false;
-        }
-        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-            setSpeed(50);
-        else
-            setSpeed(3.5);
+        setSpeed(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? 500 : 3.5);
     }
 
 
@@ -94,7 +93,5 @@ namespace Engine {
         activeCamera->setFov(activeCamera->getFov() - static_cast<float>(yoffset));
     }
 
-    Camera &Player::getActiveCamera() const {
-        return *activeCamera.get();
-    }
+    Camera &Player::getActiveCamera() const { return *activeCamera; }
 } // namespace Engine

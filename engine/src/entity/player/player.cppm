@@ -14,12 +14,13 @@ export namespace Engine {
         void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) const;
         void mouse_callback(GLFWwindow *window, double xpos, double ypos);
         void processInput(GLFWwindow *window);
+        std::optional<bool> toggleInput(GLFWwindow *window, unsigned input);
         [[nodiscard]] Camera &getActiveCamera() const;
         ~Player() override = default;
 
     private:
-        std::vector<std::reference_wrapper<Camera>> cameras;
-        std::unique_ptr<Camera> activeCamera;
+        std::vector<std::shared_ptr<Camera>> cameras;
+        std::shared_ptr<Camera> activeCamera;
         float lastMouseX, lastMouseY;
         bool firstMouse;
         std::map<unsigned, bool> keyStates;
