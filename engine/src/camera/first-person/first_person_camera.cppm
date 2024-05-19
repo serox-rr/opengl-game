@@ -10,5 +10,6 @@ export namespace Engine {
         explicit FirstPersonCamera(const glm::vec3 &position_);
         ~FirstPersonCamera() override = default;
         void setLookingDirection(float yaw_, float pitch_) override;
+        void setPosition(glm::vec3 position_) override;
     };
 } // namespace Engine

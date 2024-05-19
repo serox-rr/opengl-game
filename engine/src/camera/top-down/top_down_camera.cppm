@@ -8,5 +8,6 @@ export namespace Engine {
         explicit TopDownCamera(const glm::vec3 &position_);
         ~TopDownCamera() override = default;
         void setLookingDirection(float yaw_, float pitch_) override;
+        void setPosition(glm::vec3 position_) override;
     };
 } // namespace Engine

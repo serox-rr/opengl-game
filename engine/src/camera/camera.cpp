@@ -15,16 +15,6 @@ namespace Engine {
         view = glm::lookAt(position, position + front, up);
     }
 
-    void Camera::setPosition(glm::vec3 _position) {
-        position = _position;
-        updateView();
-    }
-
-    void Camera::addPosition(glm::vec3 _position) {
-        position += _position;
-        updateView();
-    }
-
     float Camera::getPitch() const {
         return pitch;
     }

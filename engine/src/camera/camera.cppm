@@ -18,8 +18,7 @@ export namespace Engine {
         [[nodiscard]] glm::vec3 getPosition() const;
 
         virtual void setLookingDirection(float yaw_, float pitch_) = 0;
-        void setPosition(glm::vec3 position);
-        void addPosition(glm::vec3 position);
+        virtual void setPosition(glm::vec3 position_) = 0;
         void setFov(float _fov);
         void updateView();
         virtual ~Camera() = default;

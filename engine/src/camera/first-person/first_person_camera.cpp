@@ -22,4 +22,9 @@ namespace Engine {
         front = glm::normalize(direction);
         updateView();
     }
+
+    void FirstPersonCamera::setPosition(const glm::vec3 position_) {
+        position = position_;
+        updateView();
+    }
 } // namespace Engine

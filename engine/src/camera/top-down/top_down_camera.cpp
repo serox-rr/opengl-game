@@ -20,4 +20,11 @@ namespace Engine {
         front = glm::normalize(direction);
         updateView();
     }
+
+        void setPosition(glm::vec3 position);
+
+    void TopDownCamera::setPosition(const glm::vec3 position_) {
+        position = position_ + glm::vec3(0.0f, 10.0f, 0.0f);
+        updateView();
+    }
 }
